@@ -1,14 +1,13 @@
 # Configuration for a Raspberry Pi 3 Model B Vi.2
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, modulesPath, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+    [
       # Inherits the default aarch64 partition layouts and generic-extlinux setup
       # https://sourcegraph.com/r/github.com/NixOS/nixpkgs@1da598155d27977d91c47e51a9c84ce91f2717fd/-/blob/nixos/modules/installer/sd-card/sd-image-aarch64.nix
-      # <nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64.nix>
+      (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
     ];
 
   # --- Bootloader Configuration ---
@@ -82,6 +81,7 @@
     vim 
     htop
     tree
+    tmux
   ];
 
   # This option defines the first version of NixOS you have installed on this particular machine,
@@ -103,4 +103,5 @@
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "26.05"; # Did you read the comment?
 
+  nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
 }
