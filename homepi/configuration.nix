@@ -73,6 +73,8 @@
     };
   };
 
+  networking.firewall.allowedTCPPorts = [ 80 ];
+
   # --- Access & Security ---
   services.openssh.enable = true;
   services.openssh.settings.PermitRootLogin = "yes";
@@ -95,6 +97,15 @@
     tree
     tmux
   ];
+
+  # --- Applications ----
+  services.nginx = {
+    enable = true;
+    virtualHosts."localhost" = {
+      # Change this to the folder where your index.html lives
+      root = ../splash;
+    };
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
