@@ -1,17 +1,22 @@
 # Configuration for a Raspberry Pi 3 Model B Vi.2
 
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
-  imports =
-    [
-      # Inherits the default aarch64 partition layouts and generic-extlinux setup
-      # https://sourcegraph.com/r/github.com/NixOS/nixpkgs@1da598155d27977d91c47e51a9c84ce91f2717fd/-/blob/nixos/modules/installer/sd-card/sd-image-aarch64.nix
-      (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
-    ];
+  imports = [
+    # Inherits the default aarch64 partition layouts and generic-extlinux setup
+    # https://sourcegraph.com/r/github.com/NixOS/nixpkgs@1da598155d27977d91c47e51a9c84ce91f2717fd/-/blob/nixos/modules/installer/sd-card/sd-image-aarch64.nix
+    (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
+  ];
 
   # --- Bootloader Configuration ---
-  # Raspberry Pi 3 boots natively using the generic extlinux structure 
+  # Raspberry Pi 3 boots natively using the generic extlinux structure
   # included in the standard aarch64 SD image.
   boot.loader.grub.enable = false;
   # Enables the generation of /boot/extlinux/extlinux.conf
@@ -22,15 +27,20 @@
   hardware.enableRedistributableFirmware = true;
   # For the hardware serial console (UART) if you use a console cable
   # On Pi 3, ttyS1 or ttyAMA0 is used depending on Bluetooth allocation
-  boot.kernelParams = lib.mkForce [ "console=ttyS1,115200n8" "console=tty0" ];
+  boot.kernelParams = lib.mkForce [
+    "console=ttyS1,115200n8"
+    "console=tty0"
+  ];
 
   # --- Memory Management for 1GB RAM ---
-  # NixOS rebuilding is heavy. Without swap, a 1GB Pi 3 will hit Out-Of-Memory (OOM) 
+  # NixOS rebuilding is heavy. Without swap, a 1GB Pi 3 will hit Out-Of-Memory (OOM)
   # errors and freeze during updates.
-  swapDevices = [ {
-    device = "/var/lib/swapfile";
-    size = 2048; # 2GB Swap file
-  } ];
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 2048; # 2GB Swap file
+    }
+  ];
 
   # --- Networking ---
   networking = {
@@ -41,19 +51,21 @@
 
   networking.interfaces.enu1u1 = {
     # Explicitly enable DHCP on this interface
-    useDHCP = true; 
+    useDHCP = true;
     # Static address as a fallback for direct debug
-    ipv4.addresses = [{
-      address = "192.168.99.1";
-      prefixLength = 24; # Subnet mask 255.255.255.0
-    }];
+    ipv4.addresses = [
+      {
+        address = "192.168.99.1";
+        prefixLength = 24; # Subnet mask 255.255.255.0
+      }
+    ];
   };
 
   services.avahi = {
     enable = true;
     nssmdns4 = true; # Allows resolving other .local items over IPv4
     openFirewall = true; # Automatically opens UDP port 5353 in the NixOS firewall
-    
+
     publish = {
       enable = true;
       addresses = true; # Broadcasts the machine's IP address
@@ -78,7 +90,7 @@
 
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
-    vim 
+    vim
     htop
     tree
     tmux
@@ -102,6 +114,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "26.05"; # Did you read the comment?
-
-  nixpkgs.hostPlatform = lib.mkDefault "aarch64-linux";
 }
