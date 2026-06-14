@@ -52,13 +52,6 @@
   networking.interfaces.enu1u1 = {
     # Explicitly enable DHCP on this interface
     useDHCP = true;
-    # Static address as a fallback for direct debug
-    ipv4.addresses = [
-      {
-        address = "192.168.99.1";
-        prefixLength = 24; # Subnet mask 255.255.255.0
-      }
-    ];
   };
 
   services.avahi = {
