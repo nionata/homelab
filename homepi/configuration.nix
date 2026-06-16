@@ -45,12 +45,11 @@
   # --- Networking ---
   networking = {
     hostName = "homepi";
-    wireless.enable = true; # Enables wpa_supplicant for Wi-Fi
-    networkmanager.enable = true; # Configure network connections interactively with nmcli or nmtui.
-  };
-
-  networking.interfaces.enu1u1 = {
-    # Explicitly enable DHCP on this interface
+    # Enables wpa_supplicant for Wi-Fi
+    wireless.enable = true;
+    # Configure network connections interactively with nmcli or nmtui
+    networkmanager.enable = true;
+    # Enable DHCP on all interfaces
     useDHCP = true;
   };
 
