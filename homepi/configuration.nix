@@ -15,13 +15,6 @@
     (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
   ];
 
-  # --- Bootloader Configuration ---
-  # Raspberry Pi 3 boots natively using the generic extlinux structure
-  # included in the standard aarch64 SD image.
-  boot.loader.grub.enable = false;
-  # Enables the generation of /boot/extlinux/extlinux.conf
-  boot.loader.generic-extlinux-compatible.enable = true;
-
   # --- Raspberry Pi 3 Specific Hardware & Firmware ---
   # Essential firmware for the Pi 3's Broadcom Wi-Fi, Bluetooth, and VideoCore GPU
   hardware.enableRedistributableFirmware = true;
