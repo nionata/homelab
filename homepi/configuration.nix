@@ -38,12 +38,43 @@
   # --- Networking ---
   networking = {
     hostName = "homepi";
-    # Enables wpa_supplicant for Wi-Fi
-    wireless.enable = true;
-    # Configure network connections interactively with nmcli or nmtui
-    networkmanager.enable = true;
-    # Enable DHCP on all interfaces
-    useDHCP = true;
+    # Use networkd
+    useNetworkd = true;
+    # Don't use legacy DHCP
+    useDHCP = false;
+
+    wireless.iwd = {
+      enable = true;
+      settings = {
+        Settings = {
+          AutoConnect = true;
+        };
+        Network = {
+          EnableIPv6 = true;
+        };
+      };
+    };
+  };
+
+  systemd.network = {
+    enable = true;
+    networks = {
+      # Handle any plugged-in Ethernet cable
+      "20-ethernet-dhcp" = {
+        matchConfig.Name = "en*";
+        networkConfig = {
+          DHCP = "yes";
+          # Fallback to link-local ipv4 or ipv6 when DHCP connection fails
+          LinkLocalAddressing = "yes";
+        };
+      };
+      # Handle the Wi-Fi connection once wpa_supplicant authenticates it
+      "30-wifi-dhcp" = {
+        matchConfig.Name = "wl*";
+        networkConfig.DHCP = "yes";
+        networkConfig.IgnoreCarrierLoss = "3s";
+      };
+    };
   };
 
   services.avahi = {
