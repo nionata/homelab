@@ -35,6 +35,13 @@
               ./configurations/homepi/configuration.nix
             ];
           };
+
+          homeroc = nixosSystem {
+            system = "aarch64-linux";
+            modules = [
+              ./configurations/homeroc/configuration.nix
+            ];
+          };
         };
 
       # This sets the default formatter for `nix fmt`
