@@ -31,6 +31,7 @@
         # Target the unified Binman file output instead of the raw fragments
         filesToInstall = [ "u-boot-rockchip.bin" ];
 
+        # TODO: inject updated memory address for kernel and initrd
         extraMakeFlags = [ 
           # Inject trusted firmware for bluetooth?
           "BL31=${pkgs.armTrustedFirmwareRK3328}/bl31.elf" 
