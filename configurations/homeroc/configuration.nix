@@ -21,29 +21,10 @@
   nixpkgs.config.allowUnfree = true; # needed for ubootRock64
   # at the time of writing the u-boot version from FireFly hasn't been successfully ported yet
   # so we use the one from Rock64
-  sdImage.postBuildCommands =
-    with pkgs;
-    let
-      ubootRenegade = pkgs.buildUBoot {
-        defconfig = "roc-cc-rk3328_defconfig";
-        extraMeta.platforms = [ "aarch64-linux" ];
-
-        # Target the unified Binman file output instead of the raw fragments
-        filesToInstall = [ "u-boot-rockchip.bin" ];
-
-        # TODO: inject updated memory address for kernel and initrd
-        extraMakeFlags = [ 
-          # Inject trusted firmware for bluetooth?
-          "BL31=${pkgs.armTrustedFirmwareRK3328}/bl31.elf" 
-          # Inject Rockchip's proprietary DDR training binary blobs
-          "ROCKCHIP_TPL=${pkgs.rkbin}/bin/rk33/rk3328_ddr_333MHz_v1.16.bin"
-        ];
-      };
-    in
-    ''
-      # Flash the unified binary directly to Sector 64 without truncation
-      dd if=${ubootRenegade}/u-boot-rockchip.bin of=$img conv=fsync,notrunc bs=512 seek=64
-    '';
+  sdImage.postBuildCommands = ''
+    # Flash the unified binary directly to Sector 64 without truncation
+    dd if=${pkgs.ubootRenegade}/u-boot-rockchip.bin of=$img conv=fsync,notrunc bs=512 seek=64
+  '';
 
   # For the hardware serial console (UART) if you use a console cable
   boot.kernelParams = lib.mkForce [

@@ -7,14 +7,23 @@
     { self, nixpkgs, ... }@inputs:
     let
       system = "aarch64-linux";
-      legacyPackages = nixpkgs.legacyPackages.${system};
+
+      overlays = [
+        (final: prev: {
+          ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
+        })
+      ];
+
+      pkgs = import nixpkgs {
+        inherit system overlays;
+      };
 
       nixosModules = nixpkgs.lib.filesystem.listFilesRecursive ./modules;
     in
     {
       inherit nixosModules;
 
-      legacyPackages.${system} = legacyPackages;
+      legacyPackages.${system} = pkgs;
 
       nixosConfigurations =
         let
@@ -25,6 +34,14 @@
               args
               // {
                 modules = nixosModules ++ (args.modules or [ ]);
+
+                # Force NixOS to use our pre-instantiated pkgs
+                specialArgs = (
+                  (args.specialArgs or { })
+                  // {
+                    inherit pkgs;
+                  }
+                );
               }
             );
         in
@@ -45,6 +62,6 @@
         };
 
       # This sets the default formatter for `nix fmt`
-      formatter.${system} = legacyPackages.nixfmt-tree;
+      formatter.${system} = pkgs.nixfmt-tree;
     };
 }
