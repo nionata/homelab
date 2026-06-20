@@ -85,6 +85,11 @@ sudo dd if=u-boot-rockchip.bin of=/dev/XYZ seek=64
 * serial debug, https://wiki.t-firefly.com/ROC-RK3328-CC/debug.html
 * TTL-2323R-RPI debug, https://www.mouser.com/datasheet/3/35/1/DS_TTL_232R_RPi.pdf
 
+### Things to try with serial cable learning
+
+* try to boot with the stock rock64 pkg at offset 64 (or by using uboot go)
+* 
+
 ### Failed Uboot
 
 This boot failed because the static linux image and initrd memory offsets were too close. 
@@ -164,4 +169,84 @@ stdout=serial,vidconsole
 vendor=rockchip
 
 Environment size: 1245/32764 bytes
+```
+
+#### New Memory Layout
+
+The fix is to adjust the default memory layout from [rk3328_common.h](https://sourcegraph.com/r/github.com/u-boot/u-boot@a7830e87555abfb81cc69275cecb2bc0fbde5b28/-/blob/include/configs/rk3328_common.h?L16-26).
+
+These changes can be tested in the u-boot shell temporarily before burning a new boot.
+
+```bash
+=> setenv ramdisk_addr_r 0x10000000
+=> setenv kernel_comp_addr_r 0x20000000
+=> boot
+
+...
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 6.18.35 (nixbld@localhost) (gcc (GCC) 15.2.0, GNU ld (GNU Binutils) 2.46) #1-NixOS SMP Tue Jun  9 10:28:53 UTC 2026
+
+...
+
+<<< Welcome to NixOS sd-card-26.05.20260611.a037402 (aarch64) - ttyS2 >>>
+
+Run 'nixos-help' for the NixOS manual.
+
+homeroc login: 
+```
+
+Trying to override these consts in code gives us issues. 
+
+> However, during early boot initialization, the Rockchip platform code executes a C function (usually found in arch/arm/mach-rockchip/board.c or generic distro boot headers). This function dynamically calculates safe memory boundaries based on how much physical DRAM was detected by the SPL. It calculates memory allocation layouts and aggressively overwrites standard locations like ramdisk_addr_r and kernel_addr_r, setting them back to the stock Rockchip layout (forcing ramdisk_addr_r to 0x06000000).
+
+
+
+Here is an overview of the memory layout
+
+```bash
+Physical Memory (RAM) Map: 0x00000000 to 0x40000000 (1GB Total)
+====================================================================================
+Address Space          | Size     | Allocation / Label & Safety Status
+====================================================================================
+0x00000000             |          |
+   │                   |  5 MB    | [Reserved] System / Boot ROM / Secure Monitor
+0x00500000 ───┐        |          |
+              ├────────┼──────────┼─► [scriptaddr] U-Boot scripts (Tiny text files)
+0x00600000 ───┘        |  24 MB   | [pxefile_addr_r] Network boot configurations
+   │                   |          |
+0x01E00000 ───┐        |  1 MB    | [fdt_addr_r] Device Tree Blob (.dtb file)
+0x01F00000 ───┼────────┼──────────┼─► [fdtoverlay_addr_r] Device Tree Overlays (.dtbo)
+0x02080000 ───┘        |  1.5 MB  | Safe boundary gap
+   │                   |          |
+   ▼                   |          | 
+0x02080000 ────────────               [kernel_addr_r]
+   │                   |          |   ┌──────────────────────────────────────────────┐
+   │                   |          |   │ Compressed Kernel (e.g., Image.gz)           │
+   │                   |          |   └──────────────────────────────────────────────┘
+   │                   | 223.5 MB |   ▼ Uncompresses and expands UPWARDS into:
+   │                   |          |   ┌──────────────────────────────────────────────┐
+   │                   |          |   │ Uncompressed Runtime Kernel Executable       │
+   │                   |          |   │ (Needs ~30MB - 45MB; safely stops way before │
+   │                   |          |   │ reaching the Ramdisk start line)             │
+   │                   |          |   └──────────────────────────────────────────────┘
+   ▼                   |          |
+0x10000000 ────────────               [ramdisk_addr_r]
+   │                   |          |   ┌──────────────────────────────────────────────┐
+   │                   |          |   │ NixOS Stage-1 Initrd / Ramdisk Archive       │
+   │                   | 256 MB   |   │ (Holds storage modules, filesystem tools,    │
+   │                   |          |   │  and cryptographic libraries)                │
+   │                   |          |   └──────────────────────────────────────────────┘
+   ▼                   |          |
+0x20000000 ────────────               [kernel_comp_addr_r]
+   │                   |          |   ┌──────────────────────────────────────────────┐
+   │                   |  32 MB   |   │ Decompression Workspace Buffer               │
+   │                   |          |   │ [kernel_comp_size = 0x2000000]               │
+   │                   |          |   └──────────────────────────────────────────────┘
+0x22000000 ────────────|          |
+   │                   | 480 MB   | [Free Memory] Available for Linux OS Runtime
+0x40000000 (1GB End)   |          |
+====================================================================================
 ```
