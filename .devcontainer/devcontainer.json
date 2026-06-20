@@ -6,15 +6,18 @@
   "mounts": [
     // Isolated volumes cache build system artifacts and provide native, high-performance file I/O
     "source=nix-store,target=/nix,type=volume",
-    "source=rust-target-cache-${localWorkspaceFolderBasename},target=${containerWorkspaceFolder}/target,type=volume",
+    "source=rust-target-cache-${localWorkspaceFolderBasename},target=/var/cache/cargo/target,type=volume",
     // Share dotfiles with host for seamless integration of the guest container with the host
     // This also makes the containers cheap to recreate
     "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
     "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/root/.zshrc,type=bind,readonly",
     "source=${localEnv:HOME}/.zsh_history,target=/root/.zsh_history,type=bind"
+    // TODO: there have been observed cases of zsh processes on the host spinning at 100% cpu
+    // This is likely some vscode helper process translating between host and container
+    // Possibly something related to the shared isuse. However, it hasn't been fully root caused
   ],
   "containerEnv": {
-    "CARGO_TARGET_DIR": "${containerWorkspaceFolder}/target"
+    "CARGO_TARGET_DIR": "/var/cache/cargo/target"
   }
 }
