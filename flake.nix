@@ -64,16 +64,6 @@
       devShells.${system} = {
         default = pkgs.mkShell {
           packages = with pkgs; [
-            # Infra
-            vim
-            less
-            openssh
-            git
-            # Shell
-            zsh
-            fzf
-            starship
-            # Lang
             cargo
             rustfmt
             clippy

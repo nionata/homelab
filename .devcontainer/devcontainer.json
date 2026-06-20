@@ -1,29 +1,12 @@
 {
-  "image": "debian:latest",
-  "features": {
-    "ghcr.io/devcontainers/features/nix:1": {
-      "multiUser": true,
-      "extraNixConfig": "experimental-features = nix-command flakes"
-    }
+  "build": {
+    "dockerfile": "Dockerfile"
   },
   "mounts": [
     "source=nix-store,target=/nix,type=volume",
     "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/root/.zshrc,type=bind,readonly",
     "source=${localEnv:HOME}/.zsh_history,target=/root/.zsh_history,type=bind"
-  ],
-  "customizations": {
-    "vscode": {
-        "settings": {
-            "terminal.integrated.defaultProfile.linux": "nix develop",
-            "terminal.integrated.profiles.linux": {
-                "nix develop": {
-                    "path": "nix",
-                    "args": ["develop", "--command", "zsh"]
-                }
-            },
-            "rust-analyzer.server.path": "rust-analyzer"
-        }
-    }
-}
+  ]
 }
