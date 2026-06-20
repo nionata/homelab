@@ -16,6 +16,12 @@
   * requires some careful separation of concerns between image, container, and dev shell
   * requires docker install
 
+#### TODO
+
+- [ ] rust analyzer working
+- [ ] get nixbuild.net remote builders working
+- [ ] user? should it be root? why or why not?
+
 #### Extra Config
 
 To drop into nix develop on container start add this to `devcontainer.json`:

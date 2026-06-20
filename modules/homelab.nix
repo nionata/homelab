@@ -96,6 +96,7 @@ in
       htop
       tree
       tmux
+      homed
     ];
   };
 }

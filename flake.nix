@@ -11,6 +11,7 @@
       overlays = [
         (final: prev: {
           ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
+          homed = final.callPackage ./pkgs/homed.nix { };
         })
       ];
 
