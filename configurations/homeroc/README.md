@@ -4,6 +4,22 @@ roc-rk3328-cc-v1.2-a
 
 ### SD Card
 
+A SD card `.img` can be built from the closure. This allows booting directly into the configured system automatically.
+
+```bash
+nix build .#nixosConfigurations.homeroc.config.system.build.sdImage
+```
+
+## TODO
+
+* Fix HDMI
+* Get bootloader into SPI flash
+
+
+## Booting
+
+### custom uboot target
+
 ```bash
 nix build .#ubootRock64
 
@@ -16,14 +32,6 @@ idbloader.img  nix-support  u-boot-rockchip.bin  u-boot.itb
 ```bash
 sudo dd if=u-boot-rockchip.bin of=/dev/XYZ seek=64
 ```
-
-## TODO
-
-* Fix HDMI
-* Get bootloader into SPI flash
-
-
-## Road to booting
 
 ### Build Img
 

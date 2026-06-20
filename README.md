@@ -19,5 +19,3 @@
   "postCreateCommand": "nix profile install nixpkgs#direnv nixpkgs#nix-direnv && cp /tmp/.zshrc /root/.zshrc && echo 'eval \"$(direnv hook zsh)\"' >> ~/.zshrc && cd /workspaces/homelab",
 
   "postStartCommand": "nix develop -c zsh"
-
-https://github.com/apple/containerization
