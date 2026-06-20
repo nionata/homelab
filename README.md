@@ -20,7 +20,11 @@
 
 - [ ] rust analyzer working
 - [ ] get nixbuild.net remote builders working
+- [ ] tailscale?
+  - [ ] prob install on the host and call it a day
+- [ ] see if there is a way to get a bash script / transform module options and materialize them in the dockerfile automatically
 - [ ] user? should it be root? why or why not?
+  - [ ] at least figure out a way to have ssh users be more sensible than root
 
 #### Extra Config
 
