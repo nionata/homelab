@@ -61,6 +61,33 @@
           };
         };
 
+      devShells.${system} = {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            # Infra
+            vim
+            less
+            openssh
+            git
+            # Shell
+            zsh
+            fzf
+            starship
+            # Lang
+            cargo
+            rustfmt
+            clippy
+            rust-analyzer
+          ];
+
+          RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+
+          shellHook = ''
+            exec zsh
+          '';
+        };
+      };
+
       # This sets the default formatter for `nix fmt`
       formatter.${system} = pkgs.nixfmt-tree;
     };

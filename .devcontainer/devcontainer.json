@@ -6,8 +6,24 @@
       "extraNixConfig": "experimental-features = nix-command flakes"
     }
   },
-  "postCreateCommand": "apt-get update && apt-get install -y openssh-client",
   "mounts": [
-    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly"
-  ]
+    "source=nix-store,target=/nix,type=volume",
+    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}/.zshrc,target=/root/.zshrc,type=bind,readonly",
+    "source=${localEnv:HOME}/.zsh_history,target=/root/.zsh_history,type=bind"
+  ],
+  "customizations": {
+    "vscode": {
+        "settings": {
+            "terminal.integrated.defaultProfile.linux": "nix develop",
+            "terminal.integrated.profiles.linux": {
+                "nix develop": {
+                    "path": "nix",
+                    "args": ["develop", "--command", "zsh"]
+                }
+            },
+            "rust-analyzer.server.path": "rust-analyzer"
+        }
+    }
+}
 }
