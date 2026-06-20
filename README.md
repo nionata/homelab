@@ -53,3 +53,15 @@ To get rust-analyzer plugin to use your local copy add this to `devcontainer.jso
     }
   }
 ```
+
+To prompt for rust analyzer:
+
+```json
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer"
+      ]
+    }
+  }
+```
