@@ -69,6 +69,15 @@
             rustfmt
             clippy
             rust-analyzer
+
+            # TODO: Make a sep shell that has all the system pkgs
+            zsh
+            fzf
+            starship
+            git
+            man
+            nixos-rebuild
+            unixtools.ping
           ];
 
           RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";

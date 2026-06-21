@@ -19,5 +19,23 @@
   ],
   "containerEnv": {
     "CARGO_TARGET_DIR": "/var/cache/cargo/target"
+  },
+  // Run nix daemon in the background
+  "postStartCommand": "nix-daemon &",
+  "postAttachCommand": "nix develop",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "nix develop",
+        "terminal.integrated.profiles.linux": {
+          "nix develop": {
+            "path": "nix",
+            "args": [
+              "develop"
+            ]
+          }
+        }
+      }
+    }
   }
 }
