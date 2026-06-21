@@ -75,6 +75,7 @@
             fzf
             starship
             git
+            vim
             man
             nixos-rebuild
             unixtools.ping
