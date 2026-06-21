@@ -25,31 +25,12 @@
     "console=tty0"
   ];
 
-  # --- Memory Management for 1GB RAM ---
-  # NixOS rebuilding is heavy. Without swap, a 1GB Pi 3 will hit Out-Of-Memory (OOM)
-  # errors and freeze during updates.
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile";
-      size = 2048; # 2GB Swap file
-    }
-  ];
-
   homelab = {
     enable = true;
     hostName = "homepi";
+    swap.enable = true;
+    splash = true;
   };
-
-  # --- Applications ----
-  services.nginx = {
-    enable = true;
-    virtualHosts."localhost" = {
-      # Change this to the folder where your index.html lives
-      root = ../../splash;
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [ 80 ];
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.

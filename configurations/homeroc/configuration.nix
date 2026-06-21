@@ -1,4 +1,4 @@
-# Configuration for a Raspberry Pi 3 Model B Vi.2
+# Configuration for a ROC-RK3328-CC (Renegade) v1.2-a
 
 {
   config,
@@ -15,9 +15,6 @@
     (modulesPath + "/installer/sd-card/sd-image-aarch64.nix")
   ];
 
-  # We may need/want this. At the very least we'll want the wifi db
-  # hardware.enableRedistributableFirmware = true;
-
   nixpkgs.config.allowUnfree = true; # needed for ubootRock64
   # at the time of writing the u-boot version from FireFly hasn't been successfully ported yet
   # so we use the one from Rock64
@@ -32,18 +29,10 @@
     "console=tty1"
   ];
 
-  # --- Memory Management for 2GB RAM ---
-  # NixOS rebuilding is heavy. Without swap, a 2GB Roc will hit Out-Of-Memory (OOM) errors and freeze during updates.
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile";
-      size = 1024; # 1GB Swap file
-    }
-  ];
-
   homelab = {
     enable = true;
     hostName = "homeroc";
+    swap.enable = true;
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
