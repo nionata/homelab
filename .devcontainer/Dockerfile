@@ -58,7 +58,13 @@ RUN rm -rf /tmp/repo
 ENV PATH="/nix/var/nix/profiles/devcontainer/bin:/nix/var/nix/profiles/default/bin:$PATH"
 
 # Source Nix environment for all zsh shells. `/etc/profile.d/` works automatically for bash sessions
-RUN mkdir -p /etc/zsh && echo '. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' >> /etc/zsh/zshenv
+# Add direnv so we activate the current folder when entering
+RUN mkdir -p /etc/zsh && \
+    echo '. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' >> /etc/zsh/zshenv && \
+    echo 'eval "$(direnv hook zsh)"' >> /etc/zsh/zshenv
+# RUN mkdir -p /etc/zsh && echo '. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' >> /etc/zsh/zshenv
+# RUN echo 'eval "$(direnv hook zsh)"' >> /etc/zsh/zshrc
+
 # Set ZSH as the default shell
 RUN ZSH_PATH="/nix/var/nix/profiles/devcontainer/bin/zsh" && \
     echo "$ZSH_PATH" >> /etc/shells && \

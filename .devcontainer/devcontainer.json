@@ -28,6 +28,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "mkhl.direnv",
         "rust-lang.rust-analyzer"
       ],
       "settings": {
