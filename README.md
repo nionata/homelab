@@ -19,7 +19,6 @@
 #### TODO
 
 - [ ] rust analyzer working
-- [ ] get nixbuild.net remote builders working
 - [ ] tailscale?
   - [ ] prob install on the host and call it a day
 - [ ] see if there is a way to get a bash script / transform module options and materialize them in the dockerfile automatically
@@ -56,12 +55,12 @@ To get rust-analyzer plugin to use your local copy add this to `devcontainer.jso
 
 ```json
 "customizations": {
-    "vscode": {
-        "settings": {
-            "rust-analyzer.server.path": "rust-analyzer"
-        }
-    }
+  "vscode": {
+      "settings": {
+          "rust-analyzer.server.path": "rust-analyzer"
+      }
   }
+}
 ```
 
 To prompt for rust analyzer:

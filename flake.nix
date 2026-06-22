@@ -36,11 +36,12 @@
               // {
                 modules = nixosModules ++ (args.modules or [ ]);
 
-                # Force NixOS to use our pre-instantiated pkgs
+                # Use the overlayed pkgs in the modules
+                # Inject inputs for nix flake registry
                 specialArgs = (
                   (args.specialArgs or { })
                   // {
-                    inherit pkgs;
+                    inherit pkgs inputs;
                   }
                 );
               }
@@ -68,20 +69,9 @@
             cargo
             rustfmt
             clippy
-            rust-analyzer
-
-            # TODO: Make a sep shell that has all the system pkgs
-            zsh
-            fzf
-            starship
-            git
-            vim
-            man
-            nixos-rebuild
-            unixtools.ping
           ];
 
-          RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
+          # RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
 
           shellHook = ''
             exec zsh

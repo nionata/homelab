@@ -1,7 +1,8 @@
 {
   "name": "homelab-dev",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
   "mounts": [
     // Isolated volumes cache build system artifacts and provide native, high-performance file I/O
@@ -20,22 +21,31 @@
   "containerEnv": {
     "CARGO_TARGET_DIR": "/var/cache/cargo/target"
   },
-  // Run nix daemon in the background
-  "postStartCommand": "nix-daemon &",
-  "postAttachCommand": "nix develop",
+  // Use the image's cmd. The cmd run infinietly.
+  "overrideCommand": false,
+  // TODO: get rid of this? what's the default behavior?
+  // "postAttachCommand": "nix develop",
   "customizations": {
     "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer"
+      ],
       "settings": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
         "terminal.integrated.defaultProfile.linux": "nix develop",
         "terminal.integrated.profiles.linux": {
           "nix develop": {
-            "path": "nix",
+            // TODO: Is the path actually needed needed?
+            "path": "/nix/var/nix/profiles/devcontainer/bin/zsh",
             "args": [
-              "develop"
+              "-c",
+              "nix develop"
             ]
           }
-        }
-      }
+        },
+        "rust-analyzer.server.path": "rust-analyzer"
+      },
     }
   }
 }

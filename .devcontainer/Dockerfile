@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
 # Install Nix in daemon mode
 RUN curl -L https://nixos.org/nix/install | sh -s -- --daemon --yes
 
+# TODO: move this to the profile pkgs
 # Install only the locale we want
 RUN apt-get update && apt-get install -y \
     locales \
@@ -21,19 +22,7 @@ RUN apt-get update && apt-get install -y \
 RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
     && locale-gen
 
-# Minimal package install for vscode extensions
-RUN apt-get update && apt-get install -y \
-    openssh-client \
-    git \
-    # Remove apt package index cache after install - not needed at runtime and keeps image smaller
-    && rm -rf /var/lib/apt/lists/*
-
-# Source Nix environment for all zsh shells. `/etc/profile.d/` works automatically for bash sessions
-# This must happen after installing zsh so the /etc/zsh directory has been created properly
-# For multi-user: /etc/profile.d/nix.sh
-# For single-user: ~/.nix-profile/profiles/default/etc/profile.d/nix.sh
-# ENV NIX_PROFILE_SH="/nix/var/nix/profiles/default/etc/profile.d/nix.sh"
-# RUN mkdir -p /etc/zsh && echo 'source /nix/var/nix/profiles/default/etc/profile.d/nix.sh' >> /etc/zsh/zshenv
+# TODO: move all of these config files into their own files
 
 # Configure nix features
 RUN mkdir -p /etc/nix && printf '%s\n' \
@@ -55,4 +44,25 @@ RUN mkdir -p /etc/ssh && echo "Host eu.nixbuild.net\n\
 # Configure remote builders known host
 RUN echo "eu.nixbuild.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPIQCZc54poJ8vqawd8TraNryQeJnvH1eLpIDgbiqymM" >> /etc/ssh/ssh_known_hosts
 
-# No CMD here as dev container handles this by default to keep the container alive
+# Install packages into the profile via nix so the base image has a solid dev environment
+# The packages here will satisfy the installed vscode extensions
+COPY . /tmp/repo/
+RUN bash -l -c "nix shell nixpkgs#git --builders '' -c \
+    nix profile install \
+    --profile /nix/var/nix/profiles/devcontainer \
+    '/tmp/repo/.devcontainer/profile' \
+    --builders ''"
+RUN rm -rf /tmp/repo
+
+# TODO: do we really need this? shouldn't something else be doing this for us?
+ENV PATH="/nix/var/nix/profiles/devcontainer/bin:/nix/var/nix/profiles/default/bin:$PATH"
+
+# Source Nix environment for all zsh shells. `/etc/profile.d/` works automatically for bash sessions
+RUN mkdir -p /etc/zsh && echo '. /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' >> /etc/zsh/zshenv
+# Set ZSH as the default shell
+RUN ZSH_PATH="/nix/var/nix/profiles/devcontainer/bin/zsh" && \
+    echo "$ZSH_PATH" >> /etc/shells && \
+    chsh -s "$ZSH_PATH"
+
+# Run the nix daemon in the container indefinitely
+CMD ["/nix/var/nix/profiles/default/bin/nix-daemon"]
