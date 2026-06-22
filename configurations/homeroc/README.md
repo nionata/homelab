@@ -258,9 +258,3 @@ Address Space          | Size     | Allocation / Label & Safety Status
 0x40000000 (1GB End)   |          |
 ====================================================================================
 ```
-
-### Cases
-
-* [Raspberry pi snap case like](https://www.printables.com/model/344341-renegade-snap-fit-case)
-   * [Motification with a different lid](https://www.printables.com/model/563106-case-for-libre-computer-board-roc-rk3328-cc-renega)
-*  [Mini PC Case with OLED Display](https://www.printables.com/model/868013-roc-rk3328-cc-renegade-mini-pc-case-with-oled-stat)
