@@ -21,29 +21,17 @@
   "containerEnv": {
     "CARGO_TARGET_DIR": "/var/cache/cargo/target"
   },
-  // Use the image's cmd. The cmd run infinietly.
+  // Use the image's infinite command.
   "overrideCommand": false,
-  // TODO: get rid of this? what's the default behavior?
-  // "postAttachCommand": "nix develop",
   "customizations": {
     "vscode": {
       "extensions": [
+        "mkhl.direnv",
         "rust-lang.rust-analyzer"
       ],
       "settings": {
         "editor.tabSize": 2,
         "editor.insertSpaces": true,
-        "terminal.integrated.defaultProfile.linux": "nix develop",
-        "terminal.integrated.profiles.linux": {
-          "nix develop": {
-            // TODO: Is the path actually needed needed?
-            "path": "/nix/var/nix/profiles/devcontainer/bin/zsh",
-            "args": [
-              "-c",
-              "nix develop"
-            ]
-          }
-        },
         "rust-analyzer.server.path": "rust-analyzer"
       },
     }

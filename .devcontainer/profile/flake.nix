@@ -26,13 +26,14 @@
           man
           openssh
           less
+          ps
           # Networking
           unixtools.ping
           # Build and deploy
           nixos-rebuild
-          # # Direnv for the
-          # direnv
-          # nix-direnv
+          # # Direnv to source dev shells
+          direnv
+          nix-direnv
           # IDE
           rust-analyzer
         ];

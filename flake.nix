@@ -69,13 +69,9 @@
             cargo
             rustfmt
             clippy
+            # This brings in rust source for rust-analyzer
+            rustc
           ];
-
-          # RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
-
-          shellHook = ''
-            exec zsh
-          '';
         };
       };
 
