@@ -36,12 +36,15 @@
               // {
                 modules = nixosModules ++ (args.modules or [ ]);
 
-                # Use the overlayed pkgs in the modules
-                # Inject inputs for nix flake registry
                 specialArgs = (
                   (args.specialArgs or { })
                   // {
-                    inherit pkgs inputs;
+                    # Inject inputs for nix flake registry
+                    inherit inputs;
+                    # Use the overlayed pkgs in the modules
+                    _pkgs = pkgs;
+                    # pass the system in
+                    # system = args.system;
                   }
                 );
               }
