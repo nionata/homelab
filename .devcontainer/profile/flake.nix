@@ -31,6 +31,7 @@
           less
           ps
           claude-code
+          gh
           # Networking
           unixtools.ping
           # Build and deploy
