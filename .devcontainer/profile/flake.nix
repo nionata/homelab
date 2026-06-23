@@ -10,7 +10,10 @@
   outputs =
     { self, parent }:
     let
-      pkgs = parent.inputs.nixpkgs.legacyPackages.aarch64-linux;
+      pkgs = import parent.inputs.nixpkgs {
+        system = "aarch64-linux";
+        config.allowUnfree = true;
+      };
     in
     {
       packages.aarch64-linux.default = pkgs.buildEnv {
@@ -27,6 +30,7 @@
           openssh
           less
           ps
+          claude-code
           # Networking
           unixtools.ping
           # Build and deploy
@@ -37,10 +41,6 @@
           # IDE
           rust-analyzer
         ];
-
-        # TOOD: inject this via a shell hook
-        # IDE: rust-analyzer
-        # RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
       };
       devShells.aarch64-linux.default = pkgs.mkShell {
         buildInputs = with pkgs; [
