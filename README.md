@@ -2,6 +2,8 @@
 
 ### Dev Container
 
+https://code.visualstudio.com/docs/devcontainers/containers
+
 * Pro
   * Great integration with vscode
   * Feels pretty native
@@ -23,3 +25,7 @@
 - [ ] see if there is a way to get a bash script / transform module options and materialize them in the dockerfile automatically
 - [ ] user? should it be root? why or why not?
   - [ ] at least figure out a way to have ssh users be more sensible than root
+
+### nixos container test
+
+https://nixcademy.com/posts/faster-cheaper-nixos-integration-tests-with-containers/

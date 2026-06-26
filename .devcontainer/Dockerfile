@@ -25,8 +25,19 @@ RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
 # TODO: move all of these config files into their own files
 
 # Configure nix features
+
+# TODO: add these. right now they're in the container's home nix.conf
+
+# experimental-features = nix-command flakes auto-allocate-uids cgroups
+# auto-allocate-uids = true
+# extra-system-features = uid-range
+# sandbox = true
+
 RUN mkdir -p /etc/nix && printf '%s\n' \
-    'experimental-features = nix-command flakes' \
+    'experimental-features = nix-command flakes auto-allocate-uids cgroups' \
+    'auto-allocate-uids = true' \
+    'extra-system-features = uid-range' \
+    'sandbox = true' \
     'builders-use-substitutes = true' \
     'builders = @/etc/nix/machines' \
     > /etc/nix/nix.conf
