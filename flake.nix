@@ -61,6 +61,13 @@
               ./configurations/homeroc/configuration.nix
             ];
           };
+
+          orbvm = nixosSystem {
+            system = "aarch64-linux";
+            modules = [
+              ./configurations/orbvm/configuration.nix
+            ];
+          };
         };
 
       devShells.${system} = {
