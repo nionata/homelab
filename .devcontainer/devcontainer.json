@@ -14,11 +14,6 @@
     "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/root/.zshrc,type=bind,readonly",
     "source=${localEnv:HOME}/.zsh_history,target=/root/.zsh_history,type=bind",
-    "source=${localEnv:HOME}/.claude,target=/root/.claude,type=bind",
-    // gh needs write access so `gh auth` token refresh persists back to the host.
-    "source=${localEnv:HOME}/.config/gh,target=/root/.config/gh,type=bind",
-    // git config dir (global gitignore, etc.) is static — readonly is fine.
-    "source=${localEnv:HOME}/.config/git,target=/root/.config/git,type=bind,readonly",
     // Mount the entire developer directory so we can access all the projects from the dev environment
     "source=${localEnv:HOME}/Developer,target=/root/Developer,type=bind"
     // TODO: there have been observed cases of zsh processes on the host spinning at 100% cpu
