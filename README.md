@@ -2,6 +2,16 @@
 
 ### Dev Container
 
+https://code.visualstudio.com/docs/devcontainers/containers
+
+Run a Linux-based development environment seamlessly on macOS. A Container Management Platform like Docker Desktop, OrbStack, [Container](https://opensource.apple.com/projects/container/), [colima](https://github.com/abiosoft/colima), etc manage the Linux guest VM. VSCode manages starting and attaching to a container in the VM with deep integration to make it feel invisible. 
+
+The Container Management Platforms leverage Apple’s native [Virtualization.framework](https://developer.apple.com/documentation/virtualization) to spin up a lightweight Linux kernel. Since the host and container share the ARM64 architecture, the guest runs via direct, native CPU virtualization instead of slower emulation. Built-in hardware extensions execute the Linux instructions directly on the Apple chip at near-native speed.
+
+The project source code lives directly on the host's native APFS filesystem and is shared with the Linux container via [VirtioFS](https://virtio-fs.gitlab.io/) (implemented by [macOS](https://developer.apple.com/documentation/virtualization/shared-directories)). Credentials and other host context is easily mounted or bridged into the Dev Container. Volumes are leveraged to cache artifacts: nix store `/nix`, cargo `target`, packages `.cargo`, and `ssh_known_hosts`. I/O on the volume runs at near-native VM speeds. This is far faster than the bind-mounted file operations.
+
+#### Notes
+
 * Pro
   * Great integration with vscode
   * Feels pretty native
@@ -16,10 +26,3 @@
   * requires careful separation of concerns between image, container, and dev shell
     * takes a lot of experimentation to get right, but that's just a one-time cost hopefully
   * requires docker install
-
-#### TODO
-
-- [ ] Extract config files out of docker RUNs into files in .devcontainer
-- [ ] see if there is a way to get a bash script / transform module options and materialize them in the dockerfile automatically
-- [ ] user? should it be root? why or why not?
-  - [ ] at least figure out a way to have ssh users be more sensible than root
