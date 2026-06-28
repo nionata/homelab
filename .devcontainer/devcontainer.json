@@ -8,6 +8,7 @@
     // Isolated volumes cache build system artifacts and provide native, high-performance file I/O
     "source=nix-store,target=/nix,type=volume",
     "source=rust-target-cache-${localWorkspaceFolderBasename},target=/var/cache/cargo/target,type=volume",
+    "source=claude-state,target=/root/.config/claude,type=volume",
     // Share dotfiles with host for seamless integration of the guest container with the host
     // This also makes the containers cheap to recreate
     "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
