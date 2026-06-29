@@ -11,7 +11,7 @@
     "source=claude-state,target=/root/.config/claude,type=volume",
     // Share dotfiles with host for seamless integration of the guest container with the host
     // This also makes the containers cheap to recreate
-    "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
+    // SSH keys are forwarded via VS Code's SSH agent socket rather than bind mounting ~/.ssh
     "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/root/.zshrc,type=bind,readonly",
     "source=${localEnv:HOME}/.zsh_history,target=/root/.zsh_history,type=bind",
