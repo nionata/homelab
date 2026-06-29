@@ -44,6 +44,8 @@ RUN mkdir -p /etc/ssh && echo "Host eu.nixbuild.net\n\
 # Configure remote builders known host
 RUN echo "eu.nixbuild.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPIQCZc54poJ8vqawd8TraNryQeJnvH1eLpIDgbiqymM" >> /etc/ssh/ssh_known_hosts
 
+# TODO(https://github.com/nionata/dotfiles/issues/6): Move profile install into entrypoint
+# TODO(https://github.com/nionata/dotfiles/issues/5): Upgrade into default profile instead of devcontainer
 # Install packages into the profile via nix so the base image has a solid dev environment
 # The packages here will satisfy the installed vscode extensions
 COPY . /tmp/repo/
@@ -55,6 +57,7 @@ RUN bash -l -c "nix shell nixpkgs#git --builders '' -c \
 RUN rm -rf /tmp/repo
 
 # TODO: do we really need this? shouldn't something else be doing this for us?
+# TODO(https://github.com/nionata/dotfiles/issues/5): This can be removed as default profile will be sourced
 ENV PATH="/nix/var/nix/profiles/devcontainer/bin:/nix/var/nix/profiles/default/bin:$PATH"
 
 # Source Nix environment for all zsh shells. `/etc/profile.d/` works automatically for bash sessions

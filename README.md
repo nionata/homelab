@@ -2,6 +2,8 @@
 
 ### Dev Container
 
+TODO(https://github.com/nionata/dotfiles/issues/10): Move to dotfiles repo
+
 https://code.visualstudio.com/docs/devcontainers/containers
 
 Run a Linux-based development environment seamlessly on macOS. A Container Management Platform like Docker Desktop, OrbStack, [Container](https://opensource.apple.com/projects/container/), [colima](https://github.com/abiosoft/colima), etc manage the Linux guest VM. VSCode manages starting and attaching to a container in the VM with deep integration to make it feel invisible. 
