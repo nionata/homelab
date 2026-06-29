@@ -13,6 +13,7 @@
     // This also makes the containers cheap to recreate
     // SSH keys are forwarded via VS Code's SSH agent socket rather than bind mounting ~/.ssh
     "source=${localEnv:HOME}/.gitconfig,target=/root/.gitconfig,type=bind,readonly",
+    "source=${localEnv:HOME}/.zshenv,target=/root/.zshenv,type=bind,readonly",
     "source=${localEnv:HOME}/.zshrc,target=/root/.zshrc,type=bind,readonly",
     "source=${localEnv:HOME}/.zsh_history,target=/root/.zsh_history,type=bind",
     // Mount the entire developer directory so we can access all the projects from the dev environment
