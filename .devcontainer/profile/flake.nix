@@ -44,6 +44,7 @@
           rustc
           rustfmt
           clippy
+          stdenv.cc
           # IDE
           rust-analyzer
           # Utils
