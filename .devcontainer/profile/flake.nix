@@ -39,16 +39,17 @@
           # # Direnv to source dev shells
           direnv
           nix-direnv
+          # Rust
+          cargo
+          rustc
+          rustfmt
+          clippy
           # IDE
           rust-analyzer
+          # Utils
+          jq
+          python3
         ];
-      };
-      devShells.aarch64-linux.default = pkgs.mkShell {
-        buildInputs = with pkgs; [
-        ];
-
-        # IDE: rust-analyzer
-        RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
       };
     };
 }
