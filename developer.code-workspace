@@ -4,5 +4,11 @@
       "name": "Developer",
       "path": "/root/Developer"
     }
-  ]
+  ],
+  "settings": {
+    "rust-analyzer.linkedProjects": [
+      "/root/Developer/homelab/homed/Cargo.toml",
+      "/root/Developer/bart-rs/Cargo.toml"
+    ]
+  }
 }
