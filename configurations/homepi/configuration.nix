@@ -31,6 +31,15 @@
     swap.enable = true;
     splash = true;
     bartTender = true;
+    usbipServer = {
+      enable = true;
+      bindings = [
+        {
+          busId = "1-1.3";
+          description = "FTDI USB-Serial";
+        }
+      ];
+    };
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,

@@ -34,6 +34,7 @@
           gh
           # Networking
           unixtools.ping
+          linuxPackages.usbip
           # Build and deploy
           nixos-rebuild
           # # Direnv to source dev shells
