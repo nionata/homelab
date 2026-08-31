@@ -33,6 +33,17 @@
     bartTender = true;
   };
 
+  environment.systemPackages = with pkgs; [
+    rkdeveloptool
+    picocom
+  ];
+
+  # Allow non-root access to Rockchip devices in maskrom and loader modes
+  services.udev.extraRules = ''
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="2207", ATTRS{idProduct}=="330c", MODE="0660", GROUP="wheel"
+    SUBSYSTEM=="usb", ATTRS{idVendor}=="2207", ATTRS{idProduct}=="320c", MODE="0660", GROUP="wheel"
+  '';
+
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
