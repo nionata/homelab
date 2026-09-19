@@ -15,7 +15,7 @@ buildUBoot {
     # Inject trusted firmware for bluetooth?
     "BL31=${armTrustedFirmwareRK3328}/bl31.elf"
     # Inject Rockchip's proprietary DDR training binary blobs
-    "ROCKCHIP_TPL=${rkbin}/bin/rk33/rk3328_ddr_333MHz_v1.16.bin"
+    "ROCKCHIP_TPL=${rkbin}/bin/rk33/rk3328_ddr_333MHz_v1.21.bin"
   ];
 
   # Inject updated memory address for kernel and initrd

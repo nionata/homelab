@@ -12,6 +12,7 @@
         (final: prev: {
           ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
           homed = final.callPackage ./pkgs/homed.nix { };
+          rkloaderRk3328 = final.callPackage ./pkgs/rkloader-rk3328.nix { };
         })
       ];
 

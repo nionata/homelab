@@ -35,6 +35,7 @@
 
   environment.systemPackages = with pkgs; [
     rkdeveloptool
+    rkloaderRk3328
     picocom
   ];
 
