@@ -20,8 +20,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    time.timeZone = "America/Los_Angeles";
+
     # --- Networking ---
-    # TODO: figure out what's going on during boot. Are we blocking or not?
     networking = {
       hostName = cfg.hostName;
       # Use networkd
@@ -44,6 +45,8 @@ in
 
     systemd.network = {
       enable = true;
+      # We don't need to wait for all interfaces. The wired interface is likely down.
+      wait-online.anyInterface = true;
       networks = {
         # Handle any plugged-in Ethernet cable
         "20-ethernet-dhcp" = {
