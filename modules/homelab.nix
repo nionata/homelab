@@ -44,6 +44,8 @@ in
 
     systemd.network = {
       enable = true;
+      # We don't need to wait for all interfaces. The wired interface is likely down.
+      wait-online.anyInterface = true;
       networks = {
         # Handle any plugged-in Ethernet cable
         "20-ethernet-dhcp" = {
