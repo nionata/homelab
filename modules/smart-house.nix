@@ -2,7 +2,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -12,10 +11,6 @@ in
   options.homelab.smartHouse = lib.mkEnableOption "PAT home automation hub with Kasa smart switch support";
 
   config = lib.mkIf cfg {
-    systemd.tmpfiles.rules = [
-      "L+ /var/lib/hass/ui-lovelace.yaml - - - - /etc/home-assistant/ui-lovelace.yaml"
-    ];
-
     services.home-assistant = {
       enable = true;
       openFirewall = true;
@@ -27,13 +22,6 @@ in
         "met"
         "tplink"
         "zeroconf"
-      ];
-
-      lovelaceConfigFile = ../dashboards/pat.yaml;
-
-      customLovelaceModules = with pkgs.home-assistant-custom-lovelace-modules; [
-        mushroom
-        mini-graph-card
       ];
 
       config = {
