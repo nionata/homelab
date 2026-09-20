@@ -38,7 +38,10 @@ in
         zeroconf = { };
         mobile_app = { };
 
-        # tplink (Kasa) and simplisafe do not support YAML config — add via the UI
+        # Most integrations do not support YAML config and must be added via the UI:
+        # - TP-Link Smart Home
+        # - System Monitor
+        # - Simplisafe
 
         automation = [
           {
