@@ -38,7 +38,7 @@ in
 
         automation = [
           {
-            alias = "Brew coffee — weekdays";
+            alias = "Weekday Coffee";
             trigger = [
               {
                 platform = "time";
@@ -70,7 +70,7 @@ in
             ];
           }
           {
-            alias = "Brew coffee — weekends";
+            alias = "Weekend Coffee";
             trigger = [
               {
                 platform = "time";
