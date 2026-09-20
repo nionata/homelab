@@ -20,8 +20,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    time.timeZone = "America/Los_Angeles";
+
     # --- Networking ---
-    # TODO: figure out what's going on during boot. Are we blocking or not?
     networking = {
       hostName = cfg.hostName;
       # Use networkd

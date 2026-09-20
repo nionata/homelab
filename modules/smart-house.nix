@@ -47,6 +47,60 @@ in
         frontend = { };
 
         # tplink (Kasa) does not support YAML config — add devices via the UI
+
+        automation = [
+          {
+            alias = "Brew coffee — weekdays";
+            trigger = [
+              {
+                platform = "time";
+                at = "06:30:00";
+              }
+            ];
+            condition = [
+              {
+                condition = "time";
+                weekday = [
+                  "mon"
+                  "tue"
+                  "wed"
+                  "thu"
+                  "fri"
+                ];
+              }
+            ];
+            action = [
+              {
+                service = "switch.turn_on";
+                target.entity_id = "switch.coffee_maker";
+              }
+            ];
+          }
+          {
+            alias = "Brew coffee — weekends";
+            trigger = [
+              {
+                platform = "time";
+                at = "07:00:00";
+              }
+            ];
+            condition = [
+              {
+                condition = "time";
+                weekday = [
+                  "sat"
+                  "sun"
+                ];
+              }
+            ];
+            action = [
+              {
+                service = "switch.turn_on";
+                target.entity_id = "switch.coffee_maker";
+              }
+            ];
+          }
+        ];
       };
     };
   };
