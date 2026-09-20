@@ -42,7 +42,7 @@ in
             trigger = [
               {
                 platform = "time";
-                at = "06:30:00";
+                at = "06:35:00";
               }
             ];
             condition = [
@@ -60,6 +60,11 @@ in
             action = [
               {
                 service = "switch.turn_on";
+                target.entity_id = "switch.coffee_maker";
+              }
+              { delay.minutes = 10; }
+              {
+                service = "switch.turn_off";
                 target.entity_id = "switch.coffee_maker";
               }
             ];
@@ -84,6 +89,11 @@ in
             action = [
               {
                 service = "switch.turn_on";
+                target.entity_id = "switch.coffee_maker";
+              }
+              { delay.minutes = 10; }
+              {
+                service = "switch.turn_off";
                 target.entity_id = "switch.coffee_maker";
               }
             ];
