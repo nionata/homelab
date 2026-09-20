@@ -13,7 +13,7 @@ views:
             alignment: center
             chips:
               - type: weather
-                entity: weather.home
+                entity: weather.forecast_home
                 show_temperature: true
                 show_conditions: true
               - type: entity
@@ -27,7 +27,7 @@ views:
       - type: grid
         cards:
           - type: custom:mushroom-weather-card
-            entity: weather.home
+            entity: weather.forecast_home
             show_current: true
             show_forecast: true
             forecast_type: hourly
@@ -45,13 +45,26 @@ views:
               action: toggle
             hold_action:
               action: more-info
+          - type: custom:mini-graph-card
+            entity: sensor.coffee_maker_current_consumption
+            name: Power Draw
+            icon: mdi:lightning-bolt
+            line_color: "#fab387"
+            line_width: 3
+            font_size: 75
+            hours_to_show: 1
+            points_per_hour: 60
+            animate: true
+            show:
+              extrema: true
+              fill: fade
 
       - type: grid
         cards:
           - type: custom:mushroom-title-card
             subtitle: homepi
           - type: custom:mini-graph-card
-            entity: sensor.system_monitor_cpu_use_percentage
+            entity: sensor.system_monitor_processor_use
             name: CPU
             icon: mdi:cpu-64-bit
             line_color: "#89b4fa"
@@ -65,7 +78,7 @@ views:
               average: true
               fill: fade
           - type: custom:mini-graph-card
-            entity: sensor.system_monitor_memory_use_percentage
+            entity: sensor.system_monitor_memory_usage
             name: Memory
             icon: mdi:memory
             line_color: "#a6e3a1"
@@ -89,7 +102,7 @@ views:
               extrema: true
               fill: fade
           - type: custom:mushroom-entity-card
-            entity: sensor.system_monitor_disk_use_percentage
+            entity: sensor.system_monitor_disk_usage
             name: Disk
             icon: mdi:harddisk
             icon_color: yellow
