@@ -23,6 +23,8 @@ views:
                   {{ 'amber' if is_state('switch.coffee_maker', 'on') else 'disabled' }}
                 content: >-
                   {{ 'Brewing' if is_state('switch.coffee_maker', 'on') else 'Off' }}
+                tap_action:
+                  action: toggle
 
       - type: grid
         cards:
