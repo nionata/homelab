@@ -1,0 +1,96 @@
+views:
+  - title: Home
+    type: sections
+    icon: mdi:home
+    sections:
+      - type: grid
+        cards:
+          - type: custom:mushroom-title-card
+            title: "{{ now().strftime('%-I:%M %p') }}"
+            subtitle: "{{ now().strftime('%A, %B %-d') }}"
+            alignment: center
+          - type: custom:mushroom-chips-card
+            alignment: center
+            chips:
+              - type: weather
+                entity: weather.home
+                show_temperature: true
+                show_conditions: true
+              - type: entity
+                entity: switch.coffee_maker
+                icon: mdi:coffee
+                icon_color: >-
+                  {{ 'amber' if is_state('switch.coffee_maker', 'on') else 'disabled' }}
+                content: >-
+                  {{ 'Brewing' if is_state('switch.coffee_maker', 'on') else 'Off' }}
+
+      - type: grid
+        cards:
+          - type: custom:mushroom-weather-card
+            entity: weather.home
+            show_current: true
+            show_forecast: true
+            forecast_type: hourly
+            secondary_info: wind_speed
+
+      - type: grid
+        cards:
+          - type: custom:mushroom-switch-card
+            entity: switch.coffee_maker
+            name: Coffee Maker
+            icon: mdi:coffee
+            icon_color: amber
+            layout: horizontal
+            tap_action:
+              action: toggle
+            hold_action:
+              action: more-info
+
+      - type: grid
+        cards:
+          - type: custom:mushroom-title-card
+            subtitle: homepi
+          - type: custom:mini-graph-card
+            entity: sensor.system_monitor_cpu_use_percentage
+            name: CPU
+            icon: mdi:cpu-64-bit
+            line_color: "#89b4fa"
+            line_width: 3
+            font_size: 75
+            hours_to_show: 1
+            points_per_hour: 60
+            animate: true
+            show:
+              extrema: true
+              average: true
+              fill: fade
+          - type: custom:mini-graph-card
+            entity: sensor.system_monitor_memory_use_percentage
+            name: Memory
+            icon: mdi:memory
+            line_color: "#a6e3a1"
+            line_width: 3
+            font_size: 75
+            hours_to_show: 1
+            animate: true
+            show:
+              extrema: true
+              fill: fade
+          - type: custom:mini-graph-card
+            entity: sensor.system_monitor_processor_temperature
+            name: Temp
+            icon: mdi:thermometer
+            line_color: "#f38ba8"
+            line_width: 3
+            font_size: 75
+            hours_to_show: 1
+            animate: true
+            show:
+              extrema: true
+              fill: fade
+          - type: custom:mushroom-entity-card
+            entity: sensor.system_monitor_disk_use_percentage
+            name: Disk
+            icon: mdi:harddisk
+            icon_color: yellow
+            layout: vertical

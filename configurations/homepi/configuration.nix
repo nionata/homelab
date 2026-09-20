@@ -31,6 +31,7 @@
     swap.enable = true;
     splash = true;
     bartTender = true;
+    smartHouse = true;
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
