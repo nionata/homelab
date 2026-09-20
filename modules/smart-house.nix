@@ -23,6 +23,7 @@ in
         "tplink"
         "zeroconf"
         "mobile_app"
+        "simplisafe"
       ];
 
       config = {
@@ -37,7 +38,7 @@ in
         zeroconf = { };
         mobile_app = { };
 
-        # tplink (Kasa) does not support YAML config — add devices via the UI
+        # tplink (Kasa) and simplisafe do not support YAML config — add via the UI
 
         automation = [
           {
