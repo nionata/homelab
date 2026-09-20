@@ -22,6 +22,7 @@ in
         "met"
         "tplink"
         "zeroconf"
+        "mobile_app"
       ];
 
       config = {
@@ -33,6 +34,8 @@ in
 
         http = { };
         frontend = { };
+        zeroconf = { };
+        mobile_app = { };
 
         # tplink (Kasa) does not support YAML config — add devices via the UI
 
