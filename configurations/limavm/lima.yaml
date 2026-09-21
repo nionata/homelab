@@ -1,0 +1,37 @@
+# Lima VM for homelab development
+# Requires: Lima >= 1.0, macOS 27+ (for USB passthrough via VZ)
+# Usage: limactl start ./configurations/limavm/lima.yaml
+
+vmType: vz
+
+images:
+  # Build with: nix build .#limavm-image
+  # Then copy: cp -L result/nixos.qcow2 configurations/limavm/nixos.qcow2
+  - location: "./configurations/limavm/nixos.qcow2"
+    arch: aarch64
+
+cpus: 4
+memory: 8GiB
+disk: 50GiB
+
+mounts:
+  - location: "~/Developer"
+    writable: true
+  - location: "~/.ssh"
+    writable: false
+
+# TODO: USB passthrough via vz backend — Lima doesn't expose a config knob for this yet.
+# Track: https://github.com/lima-vm/lima/issues
+
+networks:
+  - vzNAT: true
+
+provision:
+  - mode: boot
+    script: |
+      #!/bin/sh
+      # Apply NixOS config from flake on first boot
+      FLAKE="/root/Developer/homelab"
+      if [ -d "$FLAKE" ] && ! [ -f /etc/nixos/.lima-configured ]; then
+        nixos-rebuild switch --flake "${FLAKE}#limavm" && touch /etc/nixos/.lima-configured
+      fi

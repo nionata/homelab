@@ -68,7 +68,18 @@
               ./configurations/orbvm/configuration.nix
             ];
           };
+
+          limavm = nixosSystem {
+            system = "aarch64-linux";
+            modules = [
+              ./configurations/limavm/configuration.nix
+            ];
+          };
         };
+
+      packages.${system} = {
+        limavm-image = self.nixosConfigurations.limavm.config.system.build.image;
+      };
 
       devShells.${system} = {
         default = pkgs.mkShell {
