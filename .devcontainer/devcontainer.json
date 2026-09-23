@@ -28,6 +28,8 @@
     "CARGO_TARGET_DIR": "/var/cache/cargo/target",
     "CARGO_HOME": "/var/cache/cargo/home"
   },
+  // Pass through the CP2102 USB-UART bridge (Silicon Labs 10c4:ea60)
+  "runArgs": ["--device=/dev/ttyUSB0:/dev/ttyUSB0"],
   // Use the image's infinite command.
   "overrideCommand": false,
   "customizations": {
