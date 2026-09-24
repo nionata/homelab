@@ -43,6 +43,18 @@ in
         # - System Monitor
         # - Simplisafe
 
+        alarm_control_panel = [
+          {
+            platform = "manual";
+            name = "Home Alarm";
+            code = "1234";
+            code_arm_required = false;
+            arming_time = 10;
+            delay_time = 10;
+            trigger_time = 120;
+          }
+        ];
+
         automation = [
           {
             alias = "Weekday Coffee";
