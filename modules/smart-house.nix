@@ -21,6 +21,7 @@ in
         "frontend"
         "met"
         "tplink"
+        "wled"
         "zeroconf"
         "mobile_app"
         "simplisafe"
@@ -40,6 +41,7 @@ in
 
         # Most integrations do not support YAML config and must be added via the UI:
         # - TP-Link Smart Home
+        # - WLED (auto-discovered via zeroconf)
         # - System Monitor
         # - Simplisafe
 
