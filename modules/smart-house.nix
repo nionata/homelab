@@ -91,6 +91,41 @@ in
             ];
           }
           {
+            alias = "Hatch Alarm";
+            trigger = [
+              {
+                platform = "time";
+                at = "06:30:00";
+              }
+            ];
+            condition = [
+              {
+                condition = "time";
+                weekday = [
+                  "mon"
+                  "tue"
+                  "wed"
+                  "thu"
+                  "fri"
+                ];
+              }
+            ];
+            action = [
+              {
+                service = "light.turn_on";
+                data = {
+                  transition = 900;
+                  rgb_color = [
+                    255
+                    147
+                    0
+                  ];
+                };
+                target.entity_id = "light.hatch";
+              }
+            ];
+          }
+          {
             alias = "Weekend Coffee";
             trigger = [
               {
