@@ -48,6 +48,13 @@
             );
         in
         {
+          homemac = nixosSystem {
+            system = "aarch64-linux";
+            modules = [
+              ./configurations/homemac/configuration.nix
+            ];
+          };
+
           homepi = nixosSystem {
             system = "aarch64-linux";
             modules = [
