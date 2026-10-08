@@ -95,7 +95,7 @@ in
             trigger = [
               {
                 platform = "time";
-                at = "06:30:00";
+                at = "06:15:00";
               }
             ];
             condition = [
@@ -114,12 +114,49 @@ in
               {
                 service = "light.turn_on";
                 data = {
-                  transition = 900;
+                  brightness_pct = 10;
                   rgb_color = [
                     255
                     147
                     0
                   ];
+                  transition = 60;
+                };
+                target.entity_id = "light.hatch";
+              }
+              { delay.minutes = 3; }
+              {
+                service = "light.turn_on";
+                data = {
+                  brightness_pct = 30;
+                  transition = 60;
+                };
+                target.entity_id = "light.hatch";
+              }
+              { delay.minutes = 3; }
+              {
+                service = "light.turn_on";
+                data = {
+                  brightness_pct = 55;
+                  transition = 60;
+                };
+                target.entity_id = "light.hatch";
+              }
+              { delay.minutes = 3; }
+              {
+                service = "light.turn_on";
+                data = {
+                  brightness_pct = 80;
+                  transition = 60;
+                };
+                target.entity_id = "light.hatch";
+              }
+              { delay.minutes = 3; }
+              {
+                service = "light.turn_on";
+                data = {
+                  brightness_pct = 100;
+                  transition = 60;
                 };
                 target.entity_id = "light.hatch";
               }
