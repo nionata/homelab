@@ -34,14 +34,17 @@
             nixpkgs.lib.nixosSystem (
               args
               // {
-                modules = nixosModules ++ (args.modules or [ ]);
+                modules =
+                  nixosModules
+                  ++ (args.modules or [ ])
+                  ++ [
+                    { nixpkgs.overlays = overlays; }
+                  ];
 
-                # Use the overlayed pkgs in the modules
-                # Inject inputs for nix flake registry
                 specialArgs = (
                   (args.specialArgs or { })
                   // {
-                    inherit pkgs inputs;
+                    inherit inputs;
                   }
                 );
               }
@@ -49,7 +52,7 @@
         in
         {
           homemac = nixosSystem {
-            system = "aarch64-linux";
+            system = "x86_64-linux";
             modules = [
               ./configurations/homemac/configuration.nix
             ];
