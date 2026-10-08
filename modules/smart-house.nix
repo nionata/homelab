@@ -57,7 +57,41 @@ in
           }
         ];
 
+        scene = [
+          {
+            name = "Evening lights";
+            entities = {
+              "switch.lamp".state = "on";
+              "light.hatch" = {
+                state = "on";
+                brightness_pct = 30;
+                rgb_color = [
+                  255
+                  147
+                  0
+                ];
+              };
+            };
+          }
+        ];
+
         automation = [
+          {
+            alias = "Evening Lights";
+            trigger = [
+              {
+                platform = "sun";
+                event = "sunset";
+                offset = "-00:45:00";
+              }
+            ];
+            action = [
+              {
+                service = "scene.turn_on";
+                target.entity_id = "scene.evening_lights";
+              }
+            ];
+          }
           {
             alias = "Weekday Coffee";
             trigger = [
