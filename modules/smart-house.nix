@@ -59,6 +59,7 @@ in
 
         scene = [
           {
+            id = "evening_lights";
             name = "Evening lights";
             entities = {
               "switch.lamp".state = "on";
@@ -77,6 +78,7 @@ in
 
         automation = [
           {
+            id = "evening_lights";
             alias = "Evening Lights";
             trigger = [
               {
@@ -93,6 +95,7 @@ in
             ];
           }
           {
+            id = "weekday_coffee";
             alias = "Weekday Coffee";
             trigger = [
               {
@@ -125,6 +128,7 @@ in
             ];
           }
           {
+            id = "hatch_alarm";
             alias = "Hatch Alarm";
             trigger = [
               {
@@ -197,6 +201,7 @@ in
             ];
           }
           {
+            id = "weekend_coffee";
             alias = "Weekend Coffee";
             trigger = [
               {
