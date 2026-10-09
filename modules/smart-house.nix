@@ -59,6 +59,14 @@ in
 
         scene = [
           {
+            id = "closing_time";
+            name = "Closing time";
+            entities = {
+              "switch.lamp".state = "off";
+              "light.hatch".state = "off";
+            };
+          }
+          {
             id = "evening_lights";
             name = "Evening lights";
             entities = {
