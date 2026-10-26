@@ -112,6 +112,17 @@
     openFirewall = true;
   };
 
+  # Run an iperf3 server for network benchmarking.
+  # openFirewall only opens TCP; add UDP manually for iperf3 UDP tests.
+  services.iperf3 = {
+    enable = true;
+    openFirewall = true;
+  };
+  networking.firewall.allowedUDPPorts = [ 5201 ];
+
+  # Trust me
+  nix.settings.require-sigs = false;
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
