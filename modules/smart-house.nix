@@ -63,15 +63,17 @@ in
             id = "closing_time";
             name = "Closing time";
             entities = {
-              "switch.lamp".state = "off";
+              "switch.lamp_switch".state = "off";
               "light.hatch".state = "off";
+              "light.lamp_light".state = "off";
+              "light.office_light".state = "off";
             };
           }
           {
             id = "evening_lights";
             name = "Evening lights";
             entities = {
-              "switch.lamp".state = "on";
+              "switch.lamp_switch".state = "on";
               "light.hatch" = {
                 state = "on";
                 brightness_pct = 30;
@@ -80,6 +82,16 @@ in
                   147
                   0
                 ];
+              };
+              "light.lamp_light" = {
+                state = "on";
+                brightness_pct = 30;
+                color_temp_kelvin = 2700;
+              };
+              "light.office_light" = {
+                state = "on";
+                brightness_pct = 30;
+                color_temp_kelvin = 2700;
               };
             };
           }
