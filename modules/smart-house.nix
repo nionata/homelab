@@ -25,6 +25,7 @@ in
         "zeroconf"
         "mobile_app"
         "simplisafe"
+        "zha"
       ];
 
       config = {
