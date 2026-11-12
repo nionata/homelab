@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31.11.5
+      - run: nix fmt -- --ci
+      - run: nix flake show --all-systems
+      - run: nix flake lock --no-update-lock-file
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31.11.5
+      - uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - run: nix flake check
+      - run: nix flake check --system aarch64-linux
