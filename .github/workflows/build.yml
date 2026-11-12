@@ -34,12 +34,16 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v31.11.5
+      - id: nix-out
+        run: |
+          out=$(nix eval --raw '.#${{ matrix.attr }}')
+          echo "hash=$(basename "$out" | cut -d- -f1)" >> "$GITHUB_OUTPUT"
       - uses: nix-community/cache-nix-action@v7.0.2
         with:
-          primary-key: nix-${{ matrix.system }}-${{ hashFiles('**/*.nix', 'flake.lock') }}
-          restore-prefixes-first-match: nix-${{ matrix.system }}-
+          primary-key: nix-${{ matrix.attr }}-${{ steps.nix-out.outputs.hash }}
+          restore-prefixes-first-match: nix-${{ matrix.attr }}-
           gc-max-store-size-linux: 4G
           purge: true
-          purge-prefixes: nix-${{ matrix.system }}-
-          purge-last-accessed: 86400
+          purge-prefixes: nix-${{ matrix.attr }}-
+          purge-last-accessed: 604800
       - run: nix build -L '.#${{ matrix.attr }}'
