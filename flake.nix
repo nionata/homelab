@@ -12,6 +12,7 @@
         (final: prev: {
           ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
           homed = final.callPackage ./pkgs/homed.nix { };
+          zhaquirkSnzb04pr2 = final.callPackage ./pkgs/zha-quirk-snzb04pr2.nix { };
         })
       ];
 

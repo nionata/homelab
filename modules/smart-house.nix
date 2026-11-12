@@ -2,6 +2,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -39,6 +40,7 @@ in
         frontend = { };
         zeroconf = { };
         mobile_app = { };
+        zha.custom_quirks_path = "${pkgs.zhaquirkSnzb04pr2}";
 
         # Most integrations do not support YAML config and must be added via the UI:
         # - TP-Link Smart Home
