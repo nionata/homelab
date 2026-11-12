@@ -117,10 +117,12 @@
           homemac = self.nixosConfigurations.homemac.config.system.build.toplevel;
         };
         aarch64-linux = {
-          inherit (pkgsFor "aarch64-linux") homed zhaquirkSnzb04pr2 ubootRenegade;
+          inherit (pkgsFor "aarch64-linux") homed zhaquirkSnzb04pr2;
+          # ubootRenegade is broken in CI (Error 126 cross-compilation issue)
+          # inherit (pkgsFor "aarch64-linux") ubootRenegade;
           devShell = self.devShells.aarch64-linux.default;
           homepi = self.nixosConfigurations.homepi.config.system.build.toplevel;
-          homeroc = self.nixosConfigurations.homeroc.config.system.build.toplevel;
+          # homeroc = self.nixosConfigurations.homeroc.config.system.build.toplevel;
           orbvm = self.nixosConfigurations.orbvm.config.system.build.toplevel;
         };
       };
