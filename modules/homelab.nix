@@ -78,6 +78,8 @@ in
       };
     };
 
+    services.tailscale.enable = true;
+
     # --- Access & Security ---
     services.openssh.enable = true;
     services.openssh.settings.PermitRootLogin = "yes";
