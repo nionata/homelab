@@ -1,10 +1,17 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nix-github-actions.url = "github:nix-community/nix-github-actions";
+    nix-github-actions.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { self, nixpkgs, ... }@inputs:
+    {
+      self,
+      nixpkgs,
+      nix-github-actions,
+      ...
+    }@inputs:
     let
       systems = [
         "aarch64-linux"
@@ -99,6 +106,10 @@
             ];
           };
         };
+
+      githubActions = nix-github-actions.lib.mkGithubMatrix {
+        inherit (self) checks;
+      };
 
       checks = {
         x86_64-linux = {
