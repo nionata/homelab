@@ -1,31 +1,57 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nix-github-actions.url = "github:nix-community/nix-github-actions";
+    nix-github-actions.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { self, nixpkgs, ... }@inputs:
+    {
+      self,
+      nixpkgs,
+      nix-github-actions,
+      ...
+    }@inputs:
     let
-      system = "aarch64-linux";
-
-      overlays = [
-        (final: prev: {
-          ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
-          homed = final.callPackage ./pkgs/homed.nix { };
-          zhaquirkSnzb04pr2 = final.callPackage ./pkgs/zha-quirk-snzb04pr2.nix { };
-        })
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
       ];
 
-      pkgs = import nixpkgs {
-        inherit system overlays;
-      };
+      forEachSystem = nixpkgs.lib.genAttrs systems;
 
-      nixosModules = nixpkgs.lib.filesystem.listFilesRecursive ./modules;
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ self.overlays.default ];
+        };
     in
     {
-      inherit nixosModules;
+      nixosModules.default = nixpkgs.lib.filesystem.listFilesRecursive ./modules;
 
-      legacyPackages.${system} = pkgs;
+      overlays.default = final: prev: {
+        ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
+        homed = final.callPackage ./pkgs/homed.nix { };
+        zhaquirkSnzb04pr2 = final.callPackage ./pkgs/zha-quirk-snzb04pr2.nix { };
+      };
+
+      legacyPackages = forEachSystem pkgsFor;
+
+      devShells = forEachSystem (system: {
+        default = (pkgsFor system).mkShell {
+          packages = with (pkgsFor system); [
+            cargo
+            rustfmt
+            clippy
+            # This brings in rust source for rust-analyzer
+            rustc
+          ];
+        };
+      });
+
+      # This sets the default formatter for `nix fmt`
+      formatter = forEachSystem (system: (pkgsFor system).nixfmt-tree);
 
       nixosConfigurations =
         let
@@ -36,10 +62,10 @@
               args
               // {
                 modules =
-                  nixosModules
+                  self.nixosModules.default
                   ++ (args.modules or [ ])
                   ++ [
-                    { nixpkgs.overlays = overlays; }
+                    { nixpkgs.overlays = [ self.overlays.default ]; }
                   ];
 
                 specialArgs = (
@@ -81,19 +107,24 @@
           };
         };
 
-      devShells.${system} = {
-        default = pkgs.mkShell {
-          packages = with pkgs; [
-            cargo
-            rustfmt
-            clippy
-            # This brings in rust source for rust-analyzer
-            rustc
-          ];
-        };
+      githubActions = nix-github-actions.lib.mkGithubMatrix {
+        inherit (self) checks;
       };
 
-      # This sets the default formatter for `nix fmt`
-      formatter.${system} = pkgs.nixfmt-tree;
+      checks = {
+        x86_64-linux = {
+          devShell = self.devShells.x86_64-linux.default;
+          homemac = self.nixosConfigurations.homemac.config.system.build.toplevel;
+        };
+        aarch64-linux = {
+          inherit (pkgsFor "aarch64-linux") homed zhaquirkSnzb04pr2;
+          # ubootRenegade is broken in CI (Error 126 cross-compilation issue)
+          # inherit (pkgsFor "aarch64-linux") ubootRenegade;
+          devShell = self.devShells.aarch64-linux.default;
+          homepi = self.nixosConfigurations.homepi.config.system.build.toplevel;
+          # homeroc = self.nixosConfigurations.homeroc.config.system.build.toplevel;
+          orbvm = self.nixosConfigurations.orbvm.config.system.build.toplevel;
+        };
+      };
     };
 }
