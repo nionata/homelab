@@ -13,4 +13,6 @@
   nix.registry.homelab.flake = inputs.self;
 
   nix.registry.nixpkgs.flake = inputs.nixpkgs;
+
+  boot.zfs.forceImportRoot = false;
 }
