@@ -40,6 +40,7 @@ in
         frontend = { };
         zeroconf = { };
         mobile_app = { };
+        "automation manual" = "!include /var/lib/hass/automations.yaml";
 
         zha.custom_quirks_path = "${pkgs.zhaquirkSnzb04pr2}";
 
