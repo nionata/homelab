@@ -16,16 +16,21 @@ in
       enable = true;
       openFirewall = true;
 
-      # default_config pulls in apple_tv (needs pyatv) and Bluetooth — avoid it.
-      # zeroconf: mDNS discovery that tplink uses to find Kasa devices on the LAN
+      # default_config is intentionally excluded — it pulls in bluetooth, apple_tv,
+      # and other unwanted integrations. USB/bluetooth log noise comes from the
+      # hardware integration which is always loaded and cannot be disabled.
       extraComponents = [
+        # UI
         "frontend"
+        # weather
         "met"
-        "tplink"
-        "wled"
+        # mDNS: DNS-SD and host resolution
         "zeroconf"
+        # App
         "mobile_app"
-        "simplisafe"
+        # wled
+        "wled"
+        # Zigbee hub
         "zha"
       ];
 
@@ -36,19 +41,15 @@ in
           temperature_unit = "F";
         };
 
+        # extraComponents ensures the integration is available to be loaded.
+        # Declaring the integrations below ensures they are loaded on boot.
+        # WLED is discovered via zeroconf but must be confirmed once in the UI
         http = { };
         frontend = { };
         zeroconf = { };
         mobile_app = { };
-        "automation manual" = "!include /var/lib/hass/automations.yaml";
-
+        # Add tamper detection sensor patch
         zha.custom_quirks_path = "${pkgs.zhaquirkSnzb04pr2}";
-
-        # Most integrations do not support YAML config and must be added via the UI:
-        # - TP-Link Smart Home
-        # - WLED (auto-discovered via zeroconf)
-        # - System Monitor
-        # - Simplisafe
 
         alarm_control_panel = [
           {
@@ -100,6 +101,9 @@ in
             };
           }
         ];
+
+        # Accept automation imperatively added in the UI
+        "automation manual" = "!include /var/lib/hass/automations.yaml";
 
         automation = [
           {
