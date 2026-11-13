@@ -40,6 +40,7 @@ in
         frontend = { };
         zeroconf = { };
         mobile_app = { };
+
         zha.custom_quirks_path = "${pkgs.zhaquirkSnzb04pr2}";
 
         # Most integrations do not support YAML config and must be added via the UI:
@@ -220,6 +221,51 @@ in
                   transition = 60;
                 };
                 target.entity_id = "light.hatch";
+              }
+            ];
+          }
+          {
+            id = "device_offline_alert";
+            alias = "Device Offline Alert";
+            trigger = [
+              {
+                platform = "event";
+                event_type = "state_changed";
+              }
+            ];
+            condition = [
+              {
+                condition = "template";
+                value_template = ''
+                  {{ trigger.event.data.new_state is not none
+                     and trigger.event.data.new_state.state == 'unavailable'
+                     and (trigger.event.data.old_state is none
+                          or trigger.event.data.old_state.state != 'unavailable')
+                     and trigger.event.data.new_state.entity_id.split('.')[0] in [
+                       'light', 'switch', 'sensor', 'binary_sensor',
+                       'device_tracker', 'media_player', 'climate'
+                     ] }}'';
+              }
+            ];
+            action = [
+              {
+                action = "notify.send_message";
+                target.entity_id = [
+                  "notify.nick_iphone"
+                  "notify.ciaras_iphone"
+                ];
+                data = {
+                  title = "Device Offline";
+                  message = "{{ trigger.event.data.new_state.name | default('Unknown device') }} is unavailable";
+                };
+              }
+              {
+                service = "persistent_notification.create";
+                data = {
+                  title = "Device Offline";
+                  message = "{{ trigger.event.data.new_state.name | default('Unknown device') }} is unavailable";
+                  notification_id = "offline_{{ trigger.event.data.new_state.entity_id | default('unknown') }}";
+                };
               }
             ];
           }
