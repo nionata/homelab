@@ -45,7 +45,6 @@ in
         # extraComponents ensures the integration is available to be loaded.
         # Declaring the integrations below ensures they are loaded on boot.
         # WLED is discovered via zeroconf but must be confirmed once in the UI
-        http = { };
         frontend = { };
         zeroconf = { };
         mobile_app = { };
