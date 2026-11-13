@@ -8,8 +8,8 @@ Zigbee is the preferred wireless protocol for smart devices in my home. The prot
 | SONOFF SNZB-04PR2 | SNZB-04PR2 | Door/window sensor | Custom quirk — see `pkgs/zha-quirk-snzb04pr2.nix` |
 | SONOFF SNZB-09P | SNZB-09P | Siren | No upstream quirk |
 | SONOFF SNZB-01M | SNZB-01M | Wireless button | Battery-powered sleepy device; OTA updates and identity calls are unreliable |
-| Third Reality Smart Switch (x2) | 3RSP02064Z | Smart switch | Upstream quirk exists but `on_to_off_delay` attribute unsupported by device firmware |
-| Third Reality Color Bulb (x2) | 3RCB01057Z | Color bulb | |
+| Third Reality Smart Switch (x2) | 3RSP02064Z | Smart switch | Identify requests time out — firmware doesn't implement the identify cluster |
+| Third Reality Color Bulb (x2) | 3RCB01057Z | Color bulb | Identify requests time out — same firmware issue as the switches |
 
 ## Dev Environment
 

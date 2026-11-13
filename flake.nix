@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix-github-actions.url = "github:nix-community/nix-github-actions";
     nix-github-actions.inputs.nixpkgs.follows = "nixpkgs";
   };

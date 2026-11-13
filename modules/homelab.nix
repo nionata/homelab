@@ -71,10 +71,10 @@ in
       nssmdns4 = true; # Allows resolving other .local items over IPv4
       openFirewall = true; # Automatically opens UDP port 5353 in the NixOS firewall
 
-      publish = {
-        enable = true;
-        addresses = true; # Broadcasts the machine's IP address
-        workstation = true; # Broadcasts a generic workstation service descriptor
+      settings.publish = {
+        disable-publishing = false;
+        publish-addresses = true; # Broadcasts the machine's IP address
+        publish-workstation = true; # Broadcasts a generic workstation service descriptor
       };
     };
 

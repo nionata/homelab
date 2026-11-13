@@ -12,9 +12,10 @@ in
   options.homelab.smartHouse = lib.mkEnableOption "PAT home automation hub with Kasa smart switch support";
 
   config = lib.mkIf cfg {
+    networking.firewall.allowedTCPPorts = [ 8123 ];
+
     services.home-assistant = {
       enable = true;
-      openFirewall = true;
 
       # default_config is intentionally excluded — it pulls in bluetooth, apple_tv,
       # and other unwanted integrations. USB/bluetooth log noise comes from the
@@ -44,7 +45,6 @@ in
         # extraComponents ensures the integration is available to be loaded.
         # Declaring the integrations below ensures they are loaded on boot.
         # WLED is discovered via zeroconf but must be confirmed once in the UI
-        http = { };
         frontend = { };
         zeroconf = { };
         mobile_app = { };
