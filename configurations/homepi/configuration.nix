@@ -32,6 +32,20 @@
     splash = true;
     bartTender = true;
     smartHouse = true;
+    jukebox = {
+      enable = true;
+      # Onboard 3.5mm jack (snd_bcm2835). The HDMI card is vc4hdmi, which
+      # needs "hdmi:CARD=vc4hdmi,DEV=0" since it can't go through dmix.
+      # TODO: dmix:CARD=Headphones,DEV=0 plays silence. Use the plain device until fixed
+      device = "plughw:CARD=Headphones,DEV=0";
+      # AirPlay volume drives the jacks audio mixer directly
+      mixer = "PCM";
+      mixerDevice = "hw:CARD=Headphones";
+      # The jack boots muted. shairport-sync unmutes on play and re-mutes when
+      # idle, so aplay/speaker-test are silent unless AirPlay is playing (or
+      # `amixer -c Headphones sset PCM unmute` first).
+      hardwareMute = true;
+    };
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
