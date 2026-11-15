@@ -1,0 +1,31 @@
+# Declarative scenes, included from default.nix.
+# HA parses YAML 1.1, so quote "on"/"off" or they become booleans.
+- id: closing_time
+  name: Closing time
+  entities:
+    switch.lamp_switch:
+      state: "off"
+    light.hatch:
+      state: "off"
+    light.lamp_light:
+      state: "off"
+    light.office_light:
+      state: "off"
+
+- id: evening_lights
+  name: Evening lights
+  entities:
+    switch.lamp_switch:
+      state: "on"
+    light.hatch:
+      state: "on"
+      brightness_pct: 30
+      rgb_color: [255, 147, 0]
+    light.lamp_light:
+      state: "on"
+      brightness_pct: 30
+      color_temp_kelvin: 2700
+    light.office_light:
+      state: "on"
+      brightness_pct: 30
+      color_temp_kelvin: 2700

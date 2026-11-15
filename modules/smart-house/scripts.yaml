@@ -1,0 +1,10 @@
+# Declarative scripts, included from default.nix.
+# Scripts are a mapping keyed by script id, not a list. For example:
+#
+# goodnight:
+#   alias: Goodnight
+#   sequence:
+#     - action: scene.turn_on
+#       target:
+#         entity_id: scene.closing_time
+{}

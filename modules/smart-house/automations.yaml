@@ -1,0 +1,128 @@
+# Declarative automations, included from default.nix.
+# HA parses YAML 1.1, so quote times or they become base-60 integers.
+- id: evening_lights
+  alias: Evening Lights
+  trigger:
+    - platform: sun
+      event: sunset
+      offset: "-00:45:00"
+  action:
+    - service: scene.turn_on
+      target:
+        entity_id: scene.evening_lights
+
+- id: weekday_coffee
+  alias: Weekday Coffee
+  trigger:
+    - platform: time
+      at: "06:35:00"
+  condition:
+    - condition: time
+      weekday: [mon, tue, wed, thu, fri]
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.coffee_maker
+    - delay:
+        minutes: 10
+    - service: switch.turn_off
+      target:
+        entity_id: switch.coffee_maker
+
+- id: hatch_alarm
+  alias: Hatch Alarm
+  trigger:
+    - platform: time
+      at: "06:15:00"
+  condition:
+    - condition: time
+      weekday: [mon, tue, wed, thu, fri]
+  action:
+    - service: light.turn_on
+      data:
+        brightness_pct: 10
+        rgb_color: [255, 147, 0]
+        transition: 60
+      target:
+        entity_id: light.hatch
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      data:
+        brightness_pct: 30
+        transition: 60
+      target:
+        entity_id: light.hatch
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      data:
+        brightness_pct: 55
+        transition: 60
+      target:
+        entity_id: light.hatch
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      data:
+        brightness_pct: 80
+        transition: 60
+      target:
+        entity_id: light.hatch
+    - delay:
+        minutes: 3
+    - service: light.turn_on
+      data:
+        brightness_pct: 100
+        transition: 60
+      target:
+        entity_id: light.hatch
+
+- id: device_offline_alert
+  alias: Device Offline Alert
+  trigger:
+    - platform: event
+      event_type: state_changed
+  condition:
+    - condition: template
+      value_template: >-
+        {{ trigger.event.data.new_state is not none
+           and trigger.event.data.new_state.state == 'unavailable'
+           and (trigger.event.data.old_state is none
+                or trigger.event.data.old_state.state != 'unavailable')
+           and trigger.event.data.new_state.entity_id.split('.')[0] in [
+             'light', 'switch', 'sensor', 'binary_sensor',
+             'device_tracker', 'media_player', 'climate'
+           ] }}
+  action:
+    - action: notify.send_message
+      target:
+        entity_id:
+          - notify.nick_iphone
+          - notify.ciaras_iphone
+      data:
+        title: Device Offline
+        message: "{{ trigger.event.data.new_state.name | default('Unknown device') }} is unavailable"
+    - service: persistent_notification.create
+      data:
+        title: Device Offline
+        message: "{{ trigger.event.data.new_state.name | default('Unknown device') }} is unavailable"
+        notification_id: "offline_{{ trigger.event.data.new_state.entity_id | default('unknown') }}"
+
+- id: weekend_coffee
+  alias: Weekend Coffee
+  trigger:
+    - platform: time
+      at: "07:00:00"
+  condition:
+    - condition: time
+      weekday: [sat, sun]
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.coffee_maker
+    - delay:
+        minutes: 10
+    - service: switch.turn_off
+      target:
+        entity_id: switch.coffee_maker
