@@ -20,14 +20,9 @@ symlinkJoin {
   ];
 
   # ZHA logs and skips a quirk that fails to import, leaving the device on its
-  # generic handler. Import each one here so a break fails the build instead.
+  # generic handler. Load them here the way ZHA does so a break fails the build,
+  # and fail once zha-quirks ships its own quirk for one of these devices.
   postBuild = ''
-    ${python.interpreter} -I -B -c '
-    import importlib.util, pathlib, sys
-    for path in sorted(pathlib.Path(sys.argv[1]).glob("*.py")):
-        print(f"importing {path.name}")
-        spec = importlib.util.spec_from_file_location(path.stem, path)
-        spec.loader.exec_module(importlib.util.module_from_spec(spec))
-    ' $out
+    ${python.interpreter} -I -B ${./zha-custom-quirks-check.py} $out
   '';
 }
