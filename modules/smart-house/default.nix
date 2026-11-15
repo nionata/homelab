@@ -14,15 +14,23 @@ in
   config = lib.mkIf cfg {
     networking.firewall.allowedTCPPorts = [ 8123 ];
 
-    # HA's local media dir (media_source) must exist and be writable for uploads.
-    # The UI editors write to fixed paths in the config dir. HA fails to load
-    # config if an !include target is missing, so seed them. `f` never
-    # overwrites an existing file.
     systemd.tmpfiles.rules = [
+      # HA's local media dir (media_source) must exist and be writable for uploads.
       "d /var/lib/hass/media 0750 hass hass -"
-      "f /var/lib/hass/automations.yaml 0644 hass hass - []"
-      "f /var/lib/hass/scenes.yaml 0644 hass hass - []"
+
+      # The UI editors write to fixed paths in the config dir. HA fails to load
+      # config if an !include target is missing, so seed them. `f` never
+      # overwrites an existing file.
+      "f /var/lib/hass/automations.yaml 0644 hass hass -"
+      "f /var/lib/hass/scenes.yaml 0644 hass hass -"
       "f /var/lib/hass/scripts.yaml 0644 hass hass -"
+
+      # Seed dashboards on a fresh install. `C` only copies if the target is
+      # missing, so UI edits survive. Copy the live files back here to check
+      # them in. HA creates .storage itself, but the seeds need it first.
+      "d /var/lib/hass/.storage 0700 hass hass -"
+      "C /var/lib/hass/.storage/lovelace_dashboards 0644 hass hass - ${./dashboards/registry.json}"
+      "C /var/lib/hass/.storage/lovelace.dashboard_home 0644 hass hass - ${./dashboards/home.json}"
     ];
 
     services.home-assistant = {
