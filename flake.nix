@@ -34,6 +34,8 @@
         ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
         homed = final.callPackage ./pkgs/homed.nix { };
         zhaquirkSnzb04pr2 = final.callPackage ./pkgs/zha-quirk-snzb04pr2.nix { };
+        zhaquirkSnzb09p = final.callPackage ./pkgs/zha-quirk-snzb09p.nix { };
+        zhaCustomQuirks = final.callPackage ./pkgs/zha-custom-quirks.nix { };
       };
 
       legacyPackages = forEachSystem pkgsFor;
@@ -117,7 +119,7 @@
           homemac = self.nixosConfigurations.homemac.config.system.build.toplevel;
         };
         aarch64-linux = {
-          inherit (pkgsFor "aarch64-linux") homed zhaquirkSnzb04pr2;
+          inherit (pkgsFor "aarch64-linux") homed zhaCustomQuirks;
           # ubootRenegade is broken in CI (Error 126 cross-compilation issue)
           # inherit (pkgsFor "aarch64-linux") ubootRenegade;
           devShell = self.devShells.aarch64-linux.default;
