@@ -14,13 +14,21 @@ in
   config = lib.mkIf cfg {
     networking.firewall.allowedTCPPorts = [ 8123 ];
 
+    # HA's local media dir (media_source). Must exist and be writable for uploads.
+    systemd.tmpfiles.rules = [
+      "d /var/lib/hass/media 0750 hass hass -"
+    ];
+
     services.home-assistant = {
       enable = true;
 
-      # default_config is intentionally excluded — it pulls in bluetooth, apple_tv,
-      # and other unwanted integrations. USB/bluetooth log noise comes from the
+      # default_config is intentionally excluded — it pulls in bluetooth and
+      # other unwanted integrations. USB/bluetooth log noise comes from the
       # hardware integration which is always loaded and cannot be disabled.
       extraComponents = [
+        # Enables airplay to devices.
+        # Zeroconf discovery of Apple devices on the LAN starts apple_tv config.
+        "apple_tv"
         # UI
         "frontend"
         # weather
@@ -33,6 +41,8 @@ in
         "wled"
         # Zigbee hub
         "zha"
+        # Local media and the Media panel. Also needed to play TTS.
+        "media_source"
       ];
 
       config = {
@@ -48,6 +58,8 @@ in
         frontend = { };
         zeroconf = { };
         mobile_app = { };
+        # Serves files in /var/lib/hass/media as media-source://media_source/local/
+        media_source = { };
         # Patch ZHA for newish devices
         zha.custom_quirks_path = "${pkgs.zhaCustomQuirks}";
 
