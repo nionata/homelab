@@ -25,6 +25,16 @@ The Container Management Platforms leverage Apple’s native [Virtualization.fra
 
 The project source code lives directly on the host's native APFS filesystem and is shared with the Linux container via [VirtioFS](https://virtio-fs.gitlab.io/) (implemented by [macOS](https://developer.apple.com/documentation/virtualization/shared-directories)). Credentials and other host context is easily mounted or bridged into the Dev Container. Volumes are leveraged to cache artifacts: nix store `/nix`, cargo `target`, packages `.cargo`, and `ssh_known_hosts`. I/O on the volume runs at near-native VM speeds. This is far faster than the bind-mounted file operations.
 
+#### Updating the profile
+
+The container's base packages (shell, git, rust toolchain, etc.) come from the flake in `.devcontainer/profile`, which pins nixpkgs through the root flake (`parent.url = "path:./../.."`). The Dockerfile installs it into `/nix/var/nix/profiles/devcontainer`. Because `/nix` is a persistent volume, the image's profile is only copied in when the volume is first created. Rebuilding the image does **not** update an existing volume.
+
+After changing the package list in `.devcontainer/profile/flake.nix` or bumping nixpkgs in the root `flake.lock`, upgrade the live profile from the repo root:
+
+```sh
+nix profile upgrade --profile /nix/var/nix/profiles/devcontainer '.devcontainer/profile'
+```
+
 #### Notes
 
 * Pro
