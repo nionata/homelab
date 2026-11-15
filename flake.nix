@@ -28,7 +28,13 @@
         };
     in
     {
-      nixosModules.default = nixpkgs.lib.filesystem.listFilesRecursive ./modules;
+      # Each top-level entry in modules/ is a module, either a .nix file or a
+      # directory with a default.nix. Directories can hold data files alongside.
+      nixosModules.default =
+        let
+          modulePath = ./modules;
+        in
+        map (name: modulePath + "/${name}") (builtins.attrNames (builtins.readDir modulePath));
 
       overlays.default = final: prev: {
         ubootRenegade = final.callPackage ./pkgs/uboot-renegade.nix { };
