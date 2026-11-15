@@ -11,7 +11,7 @@
       nixpkgs,
       nix-github-actions,
       ...
-    }@inputs:
+    }:
     let
       systems = [
         "aarch64-linux"
@@ -75,13 +75,6 @@
                   ++ [
                     { nixpkgs.overlays = [ self.overlays.default ]; }
                   ];
-
-                specialArgs = (
-                  (args.specialArgs or { })
-                  // {
-                    inherit inputs;
-                  }
-                );
               }
             );
         in

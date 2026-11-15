@@ -1,18 +1,17 @@
 # Base module with common config that should apply to everything.
 
 {
-  inputs,
-  ...
-}:
-{
   nix.settings.experimental-features = [
     "nix-command"
     "flakes"
   ];
 
-  nix.registry.homelab.flake = inputs.self;
+  # Flakes only. Drops nix-channel and its NIX_PATH fallback, so <nixpkgs>
+  # resolves solely through the flake registry.
+  nix.channel.enable = false;
 
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
+  # Pin `nixpkgs` in the flake registry to the nixpkgs this system was built from.
+  nixpkgs.flake.setFlakeRegistry = true;
 
   boot.zfs.forceImportRoot = false;
 }
