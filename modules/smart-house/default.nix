@@ -50,6 +50,10 @@ in
         "zha"
         # Local media and the Media panel. Also needed to play TTS.
         "media_source"
+        # CPU, memory, disk, and network sensors
+        "systemmonitor"
+        # Sun position and dawn/dusk sensors
+        "sun"
       ];
 
       config = {
@@ -60,14 +64,16 @@ in
         };
 
         # Declaring the integrations below ensures they are loaded on boot.
-        # Integrations without YAML setup (apple_tv, met, wled, and the zha
-        # radio itself) must be added once in the UI. Discovery prompts for
-        # most of them. Their config entries persist in /var/lib/hass/.storage.
+        # Integrations without YAML setup (apple_tv, met, systemmonitor, wled,
+        # and the zha radio itself) must be added once in the UI. Discovery
+        # prompts for most of them. Their config entries persist in
+        # /var/lib/hass/.storage.
         frontend = { };
         zeroconf = { };
         mobile_app = { };
         media_source = { };
         zha.custom_quirks_path = "${pkgs.zhaCustomQuirks}";
+        sun = { };
 
         alarm_control_panel = [
           {
