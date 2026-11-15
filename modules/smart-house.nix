@@ -48,8 +48,8 @@ in
         frontend = { };
         zeroconf = { };
         mobile_app = { };
-        # Add tamper detection sensor patch
-        zha.custom_quirks_path = "${pkgs.zhaquirkSnzb04pr2}";
+        # Patch ZHA for newish devices
+        zha.custom_quirks_path = "${pkgs.zhaCustomQuirks}";
 
         alarm_control_panel = [
           {

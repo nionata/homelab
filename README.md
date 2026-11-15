@@ -6,7 +6,7 @@ Zigbee is the preferred wireless protocol for smart devices in my home. The prot
 |--------|-------|------|
 | SONOFF Dongle Plus MG24 | Dongle Plus MG24 | Zigbee coordinator (USB) |
 | SONOFF SNZB-04PR2 | SNZB-04PR2 | Door/window sensor | Custom quirk — see `pkgs/zha-quirk-snzb04pr2.nix` |
-| SONOFF SNZB-09P | SNZB-09P | Siren | No upstream quirk |
+| SONOFF SNZB-09P | SNZB-09P | Siren | Custom quirk from upstream PR [#5136](https://github.com/zigpy/zha-device-handlers/pull/5136) — see `pkgs/zha-quirk-snzb09p.nix` |
 | SONOFF SNZB-01M | SNZB-01M | Wireless button | Battery-powered sleepy device; OTA updates and identity calls are unreliable |
 | Third Reality Smart Switch (x2) | 3RSP02064Z | Smart switch | Identify requests time out — firmware doesn't implement the identify cluster |
 | Third Reality Color Bulb (x2) | 3RCB01057Z | Color bulb | Identify requests time out — same firmware issue as the switches |
