@@ -1,3 +1,67 @@
+## Bringing Up a Host
+
+Every host enables the `homelab` module (`modules/homelab.nix`), which provides networkd + iwd networking, avahi (mDNS), tailscale, ssh, and the `nionata` user. These steps take a machine from a fresh NixOS install to reachable on the LAN and tailnet.
+
+### 1. Install NixOS
+
+- **SD card boards** (homepi, homeroc): flash the SD image. See `configurations/<host>/README.md`.
+- **Everything else** (homemac): install from the NixOS installer ISO, then copy the generated `hardware-configuration.nix` into `configurations/<host>/`.
+
+### 2. Deploy the config
+
+From the dev container, push the host's config:
+
+```sh
+nixos-rebuild boot --flake .#<host> --target-host <user>@<ip> --ask-sudo-password
+```
+
+- Use `boot` rather than `switch` on the first deploy. It can swap the network stack (e.g. NetworkManager to networkd + iwd), and `switch` would then drop the connection mid-activation. Reboot afterwards from the console.
+- `<user>` is whatever sudo-capable account the installer set up. Copying store paths as a non-root user needs `nix.settings.require-sigs = false` on the target, which the installer config may lack. After the first deploy, use `root@` (set its password in step 3). Root is trusted by the nix daemon, so unsigned paths are accepted without relaxing `require-sigs`.
+- If a local build fails with `unable to load seccomp BPF program`, add `--option filter-syscalls false`.
+
+> **Building on the target:** add `--build-host <user>@<ip>` (usually the same as `--target-host`) to build on the machine itself instead of in the dev container. Evaluation still happens locally, then the derivations are copied over and built natively, so no binfmt emulation or remote builders are involved. This suits beefier x86 hosts like homemac. Avoid it on the Pis, which have little RAM, slow SD storage, and lean on `homelab.swap` to survive.
+
+### 3. Log in
+
+At the console, log in as `nionata` (initial password `password`) and change it with `passwd`.
+
+Root's password depends on how the host was installed:
+
+- **SD image**: root is created from this config, so it starts as `changeme`. Change it with `sudo passwd root`.
+- **Installer ISO**: root already existed before this config was applied, so `initialPassword` never took effect. The graphical installer leaves root locked. Set a password with `sudo passwd root` so later deploys can connect as root.
+
+### 4. Wi-Fi
+
+Skip this if the host is on Ethernet. Ethernet gets DHCP automatically.
+
+```sh
+sudo iwctl station list                    # find the device, e.g. wlan0
+sudo iwctl station wlan0 scan
+sudo iwctl station wlan0 get-networks
+sudo iwctl station wlan0 connect "<SSID>"  # prompts for the passphrase
+```
+
+iwd saves the network to `/var/lib/iwd/<SSID>.psk` and reconnects on boot. networkd handles DHCP on `wl*` interfaces. Check with `networkctl` and `ip -br addr`.
+
+### 5. Tailscale
+
+```sh
+sudo tailscale up
+```
+
+Open the printed URL to add the machine to the tailnet. Confirm with `tailscale status`. The machine name defaults to the hostname, so rename it in the admin console if an old entry already took it.
+
+### 6. Verify
+
+From the Mac (not the dev container, which doesn't see multicast):
+
+```sh
+dns-sd -q <host>.local
+ssh nionata@<host>.local
+```
+
+Later deploys can target `root@<host>.local` or the tailscale name.
+
 ## Zigbee
 
 Zigbee is the preferred wireless protocol for smart devices in my home. The protocol is designed to be run local only unlike wifi devices. The pairing model is sane. Currently the devices are managed by Home Assistant's ZHA integration. I may switch to Zigbee2Mqtt at some point.
