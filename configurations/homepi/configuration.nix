@@ -57,7 +57,6 @@ in
     swap.enable = true;
     splash = true;
     bartTender = true;
-    smartHouse = true;
     jukebox = {
       enable = true;
     }

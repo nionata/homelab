@@ -22,12 +22,12 @@
   action:
     - service: switch.turn_on
       target:
-        entity_id: switch.coffee_maker
+        entity_id: switch.third_reality_inc_3rsp02064z
     - delay:
         minutes: 10
     - service: switch.turn_off
       target:
-        entity_id: switch.coffee_maker
+        entity_id: switch.third_reality_inc_3rsp02064z
 
 - id: hatch_alarm
   alias: Hatch Alarm
@@ -40,7 +40,7 @@
   actions:
     - action: light.turn_on
       target:
-        entity_id: light.hatch_2
+        entity_id: light.third_reality_inc_3rcb01057z
       data:
         transition: 300
         color_temp_kelvin: 2000
@@ -66,7 +66,7 @@
     - action: notify.send_message
       target:
         entity_id:
-          - notify.nick_iphone
+          - notify.nicks_iphone
           - notify.ciaras_iphone
       data:
         title: Device Offline
@@ -88,12 +88,12 @@
   action:
     - service: switch.turn_on
       target:
-        entity_id: switch.coffee_maker
+        entity_id: switch.third_reality_inc_3rsp02064z
     - delay:
         minutes: 10
     - service: switch.turn_off
       target:
-        entity_id: switch.coffee_maker
+        entity_id: switch.third_reality_inc_3rsp02064z
 
 # SNZB-01M button (IEEE a4:c1:38:10:26:80:ff:ff). Device triggers match on the
 # HA device_id, which only survives if .storage/core.device_registry does.
@@ -102,7 +102,7 @@
   triggers:
     - trigger: device
       domain: zha
-      device_id: e5605c8649563f70585dabcc297a6860
+      device_id: d719992b1f85e2af09603f3995b04c89
       type: remote_button_short_press
       subtype: button_1
   actions:
@@ -115,7 +115,7 @@
   triggers:
     - trigger: device
       domain: zha
-      device_id: e5605c8649563f70585dabcc297a6860
+      device_id: d719992b1f85e2af09603f3995b04c89
       type: remote_button_short_press
       subtype: button_2
   actions:

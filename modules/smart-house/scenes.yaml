@@ -3,29 +3,29 @@
 - id: closing_time
   name: Closing time
   entities:
-    switch.lamp_switch:
+    switch.third_reality_inc_3rsp02064z_2: # Lamp switch (bedroom)
       state: "off"
-    light.hatch_2:
+    light.third_reality_inc_3rcb01057z: # Hatch (bedroom)
       state: "off"
-    light.lamp_light:
+    light.third_reality_inc_3rcb01057z_2: # Lamp (living room)
       state: "off"
-    light.office_light:
+    light.third_reality_inc_3rcb01057z_3: # Lamp (office)
       state: "off"
 
 - id: evening_lights
   name: Evening lights
   entities:
-    switch.lamp_switch:
+    switch.third_reality_inc_3rsp02064z_2: # Lamp switch (bedroom)
       state: "on"
-    light.hatch_2:
-      state: "on"
-      brightness_pct: 30
-      rgb_color: [255, 147, 0]
-    light.lamp_light:
+    light.third_reality_inc_3rcb01057z: # Hatch (bedroom)
       state: "on"
       brightness_pct: 30
       color_temp_kelvin: 2700
-    light.office_light:
+    light.third_reality_inc_3rcb01057z_2: # Lamp (living room)
+      state: "on"
+      brightness_pct: 30
+      color_temp_kelvin: 2700
+    light.third_reality_inc_3rcb01057z_3: # Lamp (office)
       state: "on"
       brightness_pct: 30
       color_temp_kelvin: 2700

@@ -18,6 +18,7 @@
   homelab = {
     enable = true;
     hostName = "homemac";
+    smartHouse = true;
   };
 
   # --- Always on ---

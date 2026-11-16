@@ -5,20 +5,20 @@ digital_clock_low_siren:
   sequence:
     - action: switch.turn_on
       target:
-        entity_id: switch.rack_siren_alarm_light_enable
+        entity_id: switch.sonoff_snzb_09p_alarm_light_enable
     - action: switch.turn_on
       target:
-        entity_id: switch.rack_siren_alarm_sound_enable
+        entity_id: switch.sonoff_snzb_09p_alarm_sound_enable
     - action: select.select_option
       target:
-        entity_id: select.rack_siren_alarm_sound_type
+        entity_id: select.sonoff_snzb_09p_alarm_sound_type
       data:
         option: Chime Electronic Clock
     - action: select.select_option
       target:
-        entity_id: select.rack_siren_alarm_volume_level
+        entity_id: select.sonoff_snzb_09p_alarm_volume_level
       data:
         option: LOW
     - action: switch.turn_on
       target:
-        entity_id: switch.rack_siren_siren_on
+        entity_id: switch.sonoff_snzb_09p_siren_on
