@@ -32,6 +32,7 @@
           ps
           claude-code
           gh
+          rsync
           # Networking
           unixtools.ping
           # Build and deploy
