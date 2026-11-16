@@ -5,7 +5,7 @@
   entities:
     switch.lamp_switch:
       state: "off"
-    light.hatch:
+    light.hatch_2:
       state: "off"
     light.lamp_light:
       state: "off"
@@ -17,7 +17,7 @@
   entities:
     switch.lamp_switch:
       state: "on"
-    light.hatch:
+    light.hatch_2:
       state: "on"
       brightness_pct: 30
       rgb_color: [255, 147, 0]
