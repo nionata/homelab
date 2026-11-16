@@ -32,6 +32,9 @@ in
     services.cage = {
       enable = true;
       user = "kiosk";
+      # Restart the kiosk on switch so config changes (like browser flags)
+      # apply right away. The screen blanks for a few seconds while it does.
+      restartIfChanged = true;
       # Allow switching virtual terminals, which cage blocks by default. With a
       # USB keyboard, Ctrl+Alt+F2 opens a login console on tty2 and Ctrl+Alt+F1
       # returns to the kiosk.
@@ -52,6 +55,11 @@ in
         cfg.url
       ];
     };
+
+    # getty.target asks for a login on tty1. A switch starts it, and it
+    # conflicts with cage, so the kiosk gets stopped. Display managers skip it
+    # the same way. tty1 is the only entry.
+    systemd.targets.getty.wants = lib.mkForce [ ];
 
     # Cage exits when the browser does. Bring both back.
     systemd.services."cage-tty1".serviceConfig = {
