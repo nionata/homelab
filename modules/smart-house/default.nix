@@ -31,6 +31,7 @@ in
       "d /var/lib/hass/.storage 0700 hass hass -"
       "C /var/lib/hass/.storage/lovelace_dashboards 0644 hass hass - ${./dashboards/registry.json}"
       "C /var/lib/hass/.storage/lovelace.dashboard_home 0644 hass hass - ${./dashboards/home.json}"
+      "C /var/lib/hass/.storage/lovelace.map 0644 hass hass - ${./dashboards/map.json}"
     ];
 
     services.home-assistant = {

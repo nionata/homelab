@@ -77,9 +77,7 @@
                 },
                 {
                   "type": "tile",
-                  "entity": "switch.coffee_maker",
-                  "vertical": false,
-                  "features_position": "bottom"
+                  "entity": "switch.third_reality_inc_3rsp02064z"
                 }
               ],
               "column_span": 2
@@ -94,7 +92,12 @@
                 },
                 {
                   "type": "tile",
-                  "entity": "light.lamp_light"
+                  "entity": "light.third_reality_inc_3rcb01057z_2",
+                  "features": [
+                    {
+                      "type": "light-brightness"
+                    }
+                  ]
                 }
               ]
             },
@@ -108,7 +111,12 @@
                 },
                 {
                   "type": "tile",
-                  "entity": "light.office_light"
+                  "entity": "light.third_reality_inc_3rcb01057z_3",
+                  "features": [
+                    {
+                      "type": "light-brightness"
+                    }
+                  ]
                 }
               ]
             },
@@ -122,19 +130,20 @@
                 },
                 {
                   "type": "tile",
-                  "entity": "switch.lamp_switch"
-                },
-                {
-                  "type": "tile",
                   "entity": "automation.hatch_alarm"
                 },
                 {
-                  "type": "light",
-                  "entity": "light.hatch",
-                  "grid_options": {
-                    "rows": "auto",
-                    "columns": 6
-                  }
+                  "type": "tile",
+                  "entity": "light.third_reality_inc_3rcb01057z",
+                  "features": [
+                    {
+                      "type": "light-brightness"
+                    }
+                  ]
+                },
+                {
+                  "type": "tile",
+                  "entity": "switch.third_reality_inc_3rsp02064z_2"
                 }
               ]
             },
@@ -143,19 +152,15 @@
               "cards": [
                 {
                   "type": "heading",
-                  "heading": "Pi",
+                  "heading": "Mac",
                   "heading_style": "title",
-                  "icon": "mdi:raspberry-pi"
+                  "icon": "mdi:apple"
                 },
                 {
                   "type": "tile",
-                  "entity": "sensor.system_monitor_last_boot",
+                  "entity": "sensor.system_monitor_uptime",
                   "vertical": false,
                   "features_position": "bottom"
-                },
-                {
-                  "type": "tile",
-                  "entity": "sensor.system_monitor_processor_temperature"
                 },
                 {
                   "type": "tile",
@@ -168,6 +173,36 @@
                 {
                   "type": "tile",
                   "entity": "sensor.system_monitor_disk_usage"
+                },
+                {
+                  "type": "tile",
+                  "entity": "sensor.system_monitor_battery",
+                  "features": [
+                    {
+                      "type": "bar-gauge"
+                    }
+                  ]
+                },
+                {
+                  "type": "tile",
+                  "entity": "sensor.system_monitor_left_side_fan_speed"
+                },
+                {
+                  "type": "tile",
+                  "entity": "sensor.system_monitor_right_side_fan_speed"
+                },
+                {
+                  "type": "tile",
+                  "entity": "binary_sensor.system_monitor_charging"
+                },
+                {
+                  "type": "tile",
+                  "entity": "sensor.system_monitor_processor_temperature",
+                  "features": [
+                    {
+                      "type": "trend-graph"
+                    }
+                  ]
                 }
               ]
             }
@@ -201,7 +236,7 @@
               "cards": [
                 {
                   "type": "tile",
-                  "entity": "switch.rack_siren_siren_on",
+                  "entity": "switch.sonoff_snzb_09p_siren_on",
                   "features": [
                     {
                       "type": "toggle"
