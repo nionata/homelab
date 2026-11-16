@@ -45,6 +45,8 @@ in
         "--disable-session-crashed-bubble"
         "--disable-infobars"
         "--touch-events=enabled"
+        # Report a dark color scheme to pages. HA's default "Auto" theme follows it.
+        "--force-dark-mode"
         # Stop swipes from navigating back and forward.
         "--overscroll-history-navigation=0"
         cfg.url
