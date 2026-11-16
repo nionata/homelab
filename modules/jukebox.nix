@@ -16,12 +16,18 @@ in
     device = lib.mkOption {
       type = lib.types.str;
       description = ''
-        ALSA PCM to play through. List cards with `aplay -l`. Use dmix on an
-        analog card so several programs can share it. HDMI (vc4hdmi) only
+        ALSA PCM to play through. List cards with `aplay -l`. dmix lets several
+        programs share an analog card, but check that it plays: on some cards
+        it outputs silence, so use `plughw:` there. HDMI (vc4hdmi) only
         accepts IEC958 frames, so use the `hdmi:` PCM there, which cannot be
         shared through dmix. Card names are hardware-specific.
+
+        HDMI audio needs an active video signal. When the console blanks, the
+        kernel switches the HDMI output off, which stops audio too, so set
+        `consoleblank=0`. A graphical session powers the display off through
+        its own idle settings instead, so disable those there.
       '';
-      example = "dmix:CARD=Headphones,DEV=0";
+      example = "plughw:CARD=Headphones,DEV=0";
     };
 
     name = lib.mkOption {
@@ -123,9 +129,11 @@ in
           default_airplay_volume = -15.0;
           # Map the slider onto the audible top of the range. A hardware mixer's
           # native range can be ~100 dB (the Pi jack is -102..+4), which makes
-          # most of the slider inaudible.
+          # most of the slider inaudible. With software volume (no mixer, as on
+          # HDMI) 40 dB is still a sensible span.
           volume_range_db = 40;
-          # Don't go above unity gain (the Pi jack's mixer allows up to +4 dB)
+          # Don't go above unity gain (the Pi jack's mixer allows up to +4 dB).
+          # Software volume tops out at 0 dB anyway, since more would clip.
           volume_max_db = 0.0;
         };
         alsa = {

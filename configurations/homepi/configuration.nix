@@ -8,6 +8,29 @@
   ...
 }:
 
+let
+  # Jukebox output presets. Pick one in homelab.jukebox below.
+  jukeboxOutputs = {
+    # HDMI (vc4hdmi) only takes IEC958 frames, so it needs the hdmi: PCM and
+    # can't go through dmix. It has no mixer, so AirPlay volume is software.
+    # Audio rides in the video signal, which is why consoleblank=0 is set.
+    hdmi = {
+      device = "hdmi:CARD=vc4hdmi,DEV=0";
+    };
+    # Onboard 3.5mm jack (snd_bcm2835)
+    jack = {
+      # TODO: dmix:CARD=Headphones,DEV=0 plays silence. Use the plain device until fixed
+      device = "plughw:CARD=Headphones,DEV=0";
+      # AirPlay volume drives the jack's audio mixer directly
+      mixer = "PCM";
+      mixerDevice = "hw:CARD=Headphones";
+      # The jack boots muted. shairport-sync unmutes on play and re-mutes when
+      # idle, so aplay/speaker-test are silent unless AirPlay is playing (or
+      # `amixer -c Headphones sset PCM unmute` first).
+      hardwareMute = true;
+    };
+  };
+in
 {
   imports = [
     # Inherits the default aarch64 partition layouts and generic-extlinux setup
@@ -23,6 +46,9 @@
   boot.kernelParams = lib.mkForce [
     "console=ttyS1,115200n8"
     "console=tty0"
+    # Never blank the console. HDMI audio rides in the video signal, so a
+    # blanked screen lets the panel sleep and silences HDMI audio.
+    "consoleblank=0"
   ];
 
   homelab = {
@@ -34,18 +60,7 @@
     smartHouse = true;
     jukebox = {
       enable = true;
-      # Onboard 3.5mm jack (snd_bcm2835). The HDMI card is vc4hdmi, which
-      # needs "hdmi:CARD=vc4hdmi,DEV=0" since it can't go through dmix.
-      # TODO: dmix:CARD=Headphones,DEV=0 plays silence. Use the plain device until fixed
-      device = "plughw:CARD=Headphones,DEV=0";
-      # AirPlay volume drives the jacks audio mixer directly
-      mixer = "PCM";
-      mixerDevice = "hw:CARD=Headphones";
-      # The jack boots muted. shairport-sync unmutes on play and re-mutes when
-      # idle, so aplay/speaker-test are silent unless AirPlay is playing (or
-      # `amixer -c Headphones sset PCM unmute` first).
-      hardwareMute = true;
-    };
+    } // jukeboxOutputs.hdmi;
   };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
