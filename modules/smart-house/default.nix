@@ -63,6 +63,12 @@ in
         "systemmonitor"
         # Sun position and dawn/dusk sensors
         "sun"
+        # State history DB and long-term statistics
+        "recorder"
+        # History panel and entity graphs
+        "history"
+        # Logbook panel
+        "logbook"
       ];
 
       config = {
@@ -84,6 +90,17 @@ in
         media_source = { };
         zha.custom_quirks_path = "${pkgs.zhaCustomQuirks}";
         sun = { };
+        history = { };
+        logbook = { };
+
+        # State history DB in /var/lib/hass. Raw states are purged after
+        # purge_keep_days. Long-term statistics (hourly aggregates for sensors
+        # with a state_class) are kept indefinitely. 3 years of raw states is
+        # an estimated ~10 GB at ~8 MB/day.
+        recorder = {
+          purge_keep_days = 1095;
+          commit_interval = 30;
+        };
 
         alarm_control_panel = [
           {
