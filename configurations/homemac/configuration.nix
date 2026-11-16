@@ -2,6 +2,10 @@
 
 { ... }:
 
+let
+  # homepi over Tailscale
+  kioskIp = "100.92.231.92/32";
+in
 {
   imports = [
     # Include the results of the hardware scan.
@@ -15,15 +19,25 @@
   # Blank the built-in display after 5 minutes idle at the console.
   boot.kernelParams = [ "consoleblank=300" ];
 
+  # Machine must always be on. Closing the lid must not suspend the server.
+  services.logind.settings.Login.HandleLidSwitch = "ignore";
+
   homelab = {
     enable = true;
     hostName = "homemac";
     smartHouse = true;
   };
 
-  # --- Always on ---
-  # Closing the lid must not suspend the server.
-  services.logind.settings.Login.HandleLidSwitch = "ignore";
+  # The homepi kiosk logs in without a password. It's matched by its Tailscale
+  # IP and can only be the non-admin kiosk user.
+  services.home-assistant.config.homeassistant.auth_providers = [
+    {
+      type = "trusted_networks";
+      trusted_networks = [ kioskIp ];
+      trusted_users.${kioskIp} = [ "f16568c513d54e3eaf1b919369c19a55" ];
+      allow_bypass_login = true;
+    }
+  ];
 
   # Run an iperf3 server for network benchmarking.
   # openFirewall only opens TCP. Add UDP manually for iperf3 UDP tests.

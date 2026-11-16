@@ -70,6 +70,7 @@ in
           name = "Home";
           unit_system = "us_customary";
           temperature_unit = "F";
+          auth_providers = lib.mkBefore [ { type = "homeassistant"; } ];
         };
 
         # Declaring the integrations below ensures they are loaded on boot.

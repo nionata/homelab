@@ -56,6 +56,11 @@ in
     hostName = "homepi";
     swap.enable = true;
     splash = true;
+    kiosk = {
+      enable = true;
+      # homemac by its Tailscale (MagicDNS) name. The stable source IP lets HA trust the pi.
+      url = "http://homemac:8123/dashboard-home/0";
+    };
     bartTender = true;
     jukebox = {
       enable = true;
