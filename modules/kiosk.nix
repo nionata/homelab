@@ -61,6 +61,13 @@ in
     # the same way. tty1 is the only entry.
     systemd.targets.getty.wants = lib.mkForce [ ];
 
+    # The Pi's HDMI-CEC remote input (vc4-hdmi) reports mouse motion. Cage then
+    # thinks a mouse is attached and draws a cursor. The kiosk doesn't use
+    # TV-remote input, so hide the device from libinput.
+    services.udev.extraRules = ''
+      SUBSYSTEM=="input", KERNEL=="event*", ATTRS{name}=="vc4-hdmi", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+    '';
+
     # Cage exits when the browser does. Bring both back.
     systemd.services."cage-tty1".serviceConfig = {
       Restart = "always";
