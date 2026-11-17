@@ -25,7 +25,7 @@ in
   homelab = {
     enable = true;
     hostName = "homemac";
-    smartHouse = true;
+    smartHouse.enable = true;
   };
 
   # The homepi kiosk logs in without a password. It's matched by its Tailscale

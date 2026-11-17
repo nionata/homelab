@@ -7,12 +7,63 @@
 }:
 let
   cfg = config.homelab.smartHouse;
+
+  # pyatv with its AirPlay ports pinned (see the airplay*Port options)
+  packageOverrides = _: super: {
+    pyatv = super.pyatv.overridePythonAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        substituteInPlace pyatv/settings.py \
+          --replace-fail "timing_port: int = 0" "timing_port: int = ${toString cfg.airplayTimingPort}" \
+          --replace-fail "control_port: int = 0" "control_port: int = ${toString cfg.airplayControlPort}"
+      '';
+    });
+  };
+
+  # Install checks stay off as in the NixOS module's default package, since
+  # they run HA's own test suite.
+  homeAssistant = (pkgs.home-assistant.override { inherit packageOverrides; }).overrideAttrs {
+    doInstallCheck = false;
+  };
+
+  airplayPortNote = ''
+    pyatv binds this at random (port 0) unless set, and Home Assistant's
+    apple_tv integration never sets it. It's pinned so the firewall can allow
+    it. See https://github.com/postlund/pyatv/issues/2559.
+  '';
 in
 {
-  options.homelab.smartHouse = lib.mkEnableOption "PAT home automation hub with Kasa smart switch support";
+  options.homelab.smartHouse = {
+    enable = lib.mkEnableOption "PAT home automation hub with Kasa smart switch support";
 
-  config = lib.mkIf cfg {
+    airplayTimingPort = lib.mkOption {
+      type = lib.types.port;
+      description = ''
+        UDP port pyatv's AirPlay timing server binds on.
+        ${airplayPortNote}'';
+      default = 6020;
+    };
+
+    airplayControlPort = lib.mkOption {
+      type = lib.types.port;
+      description = ''
+        UDP port pyatv's AirPlay control server binds on.
+        ${airplayPortNote}'';
+      default = 6021;
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [ 8123 ];
+
+    # AirPlay (apple_tv/pyatv) streaming to shairport-sync receivers. In classic
+    # AirPlay the receiver sends clock-sync requests to pyatv's timing port and
+    # resend requests to its control port. Nothing outbound opens conntrack
+    # state for those, so the firewall must allow them. The pyatv override
+    # below pins both. Only one stream can run at a time with fixed ports.
+    networking.firewall.allowedUDPPorts = [
+      cfg.airplayTimingPort
+      cfg.airplayControlPort
+    ];
 
     systemd.tmpfiles.rules = [
       # HA's local media dir (media_source) must exist and be writable for uploads.
@@ -47,6 +98,8 @@ in
 
     services.home-assistant = {
       enable = true;
+
+      package = homeAssistant;
 
       # Declare the desired integrations so they will be available at runtime.
       # default_config is intentionally excluded — it pulls in bluetooth and
@@ -140,5 +193,9 @@ in
         "script ui" = "!include /var/lib/hass/scripts.yaml";
       };
     };
+
+    # Build the patched pyatv:
+    # nix build .#nixosConfigurations.<host>.config.system.build.pyatv
+    system.build.pyatv = homeAssistant.python3Packages.pyatv;
   };
 }
