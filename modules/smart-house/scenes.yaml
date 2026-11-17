@@ -5,7 +5,7 @@
   entities:
     switch.third_reality_inc_3rsp02064z_2: # Lamp switch (bedroom)
       state: "off"
-    light.third_reality_inc_3rcb01057z: # Hatch (bedroom)
+    light.bedroom_hatch2: # Hatch (bedroom)
       state: "off"
     light.third_reality_inc_3rcb01057z_2: # Lamp (living room)
       state: "off"
@@ -17,7 +17,7 @@
   entities:
     switch.third_reality_inc_3rsp02064z_2: # Lamp switch (bedroom)
       state: "on"
-    light.third_reality_inc_3rcb01057z: # Hatch (bedroom)
+    light.bedroom_hatch2: # Hatch (bedroom)
       state: "on"
       brightness_pct: 30
       color_temp_kelvin: 2700

@@ -134,7 +134,7 @@
                 },
                 {
                   "type": "tile",
-                  "entity": "light.third_reality_inc_3rcb01057z",
+                  "entity": "light.bedroom_hatch2",
                   "features": [
                     {
                       "type": "light-brightness"
