@@ -41,7 +41,7 @@ in
     # Samples: https://rhasspy.github.io/piper-samples/
     services.wyoming.piper.servers.ha = {
       enable = true;
-      voice = "en_US-lessac-medium";
+      voice = "en_US-norman-medium";
       uri = "tcp://127.0.0.1:10200";
     };
 
