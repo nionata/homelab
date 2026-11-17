@@ -51,10 +51,15 @@ in
     "consoleblank=0"
   ];
 
+  # Compressed swap in RAM. Swapping to the SD card is too slow to be usable.
+  zramSwap = {
+    enable = true;
+    memoryPercent = 100;
+  };
+
   homelab = {
     enable = true;
     hostName = "homepi";
-    swap.enable = true;
     splash = true;
     kiosk = {
       enable = true;
