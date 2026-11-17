@@ -20,3 +20,4 @@ Steps that still happen in the HA UI after deploying to a host with no existing 
 6. Approve the discovered WLED device
 7. Configure the mobile app
 8. Plug in the zigbee USB device and register devices
+9. Approve the discovered Piper (Wyoming Protocol) device. Then pick Piper as the text-to-speech engine under Settings → Voice assistants.

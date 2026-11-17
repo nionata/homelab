@@ -34,6 +34,17 @@ in
       "C /var/lib/hass/.storage/lovelace.map 0644 hass hass - ${./dashboards/map.json}"
     ];
 
+    # Piper text-to-speech, served to HA over the Wyoming protocol. Only HA
+    # uses it, so it binds to localhost. Zeroconf advertises the bind address,
+    # so HA discovers it at 127.0.0.1 and nothing is exposed on the LAN. The
+    # voice model is downloaded into /var/lib/wyoming/piper on first start.
+    # Samples: https://rhasspy.github.io/piper-samples/
+    services.wyoming.piper.servers.ha = {
+      enable = true;
+      voice = "en_US-lessac-medium";
+      uri = "tcp://127.0.0.1:10200";
+    };
+
     services.home-assistant = {
       enable = true;
 
@@ -69,6 +80,8 @@ in
         "history"
         # Logbook panel
         "logbook"
+        # Talks to the local Piper text-to-speech server
+        "wyoming"
       ];
 
       config = {
