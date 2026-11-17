@@ -33,7 +33,7 @@
   alias: Hatch Alarm
   triggers:
     - trigger: time
-      at: "06:15:00"
+      at: "06:30:00"
   conditions:
     - condition: time
       weekday: [mon, tue, wed, thu, fri]
@@ -44,7 +44,17 @@
       data:
         transition: 300
         color_temp_kelvin: 2000
-        brightness_pct: 100
+        brightness_pct: 25
+    # The transition doesn't block, so wait it out before the second ramp.
+    - delay:
+        minutes: 5
+    - action: light.turn_on
+      target:
+        entity_id: light.bedroom_hatch2
+      data:
+        transition: 300
+        color_temp_kelvin: 2000
+        brightness_pct: 50
 
 - id: device_offline_alert
   alias: Device Offline Alert
