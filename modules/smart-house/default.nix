@@ -135,6 +135,9 @@ in
         "logbook"
         # Talks to the local Piper text-to-speech server
         "wyoming"
+        # Reolink cameras and doorbells. ONVIF push events arrive on the HA
+        # webhook (port 8123), which is already open.
+        "reolink"
       ];
 
       config = {
@@ -146,8 +149,8 @@ in
         };
 
         # Declaring the integrations below ensures they are loaded on boot.
-        # Integrations without YAML setup (apple_tv, met, systemmonitor, wled,
-        # and the zha radio itself) must be added once in the UI. Discovery
+        # Integrations without YAML setup (apple_tv, met, reolink, systemmonitor,
+        # wled, and the zha radio itself) must be added once in the UI. Discovery
         # prompts for most of them. Their config entries persist in
         # /var/lib/hass/.storage.
         frontend = { };
