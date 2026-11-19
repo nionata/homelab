@@ -4,7 +4,7 @@
 
 let
   # homepi over Tailscale
-  kioskIp = "100.92.231.92/32";
+  kioskIp = "100.80.209.122/32";
 in
 {
   imports = [
