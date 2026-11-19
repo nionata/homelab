@@ -42,6 +42,7 @@
         zhaquirkSnzb04pr2 = final.callPackage ./pkgs/zha-quirk-snzb04pr2.nix { };
         zhaquirkSnzb09p = final.callPackage ./pkgs/zha-quirk-snzb09p.nix { };
         zhaCustomQuirks = final.callPackage ./pkgs/zha-custom-quirks.nix { };
+        reolink-cli = final.callPackage ./pkgs/reolink-cli.nix { };
       };
 
       legacyPackages = forEachSystem pkgsFor;

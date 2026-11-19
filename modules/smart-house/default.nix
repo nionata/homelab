@@ -55,6 +55,10 @@ in
   config = lib.mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [ 8123 ];
 
+    # Reolink camera CLI. The released binaries are under a proprietary EULA.
+    nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "reolink-cli";
+    environment.systemPackages = [ pkgs.reolink-cli ];
+
     # AirPlay (apple_tv/pyatv) streaming to shairport-sync receivers. In classic
     # AirPlay the receiver sends clock-sync requests to pyatv's timing port and
     # resend requests to its control port. Nothing outbound opens conntrack
