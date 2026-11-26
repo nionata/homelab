@@ -142,6 +142,10 @@ in
         # Reolink cameras and doorbells. ONVIF push events arrive on the HA
         # webhook (port 8123), which is already open.
         "reolink"
+        # Watches DHCP traffic to discover devices. Reolink is matched by its
+        # MAC prefix, and known cameras get their IP updated when it changes.
+        # The NixOS module grants CAP_NET_RAW for the packet capture.
+        "dhcp"
       ];
 
       config = {
@@ -159,6 +163,7 @@ in
         # /var/lib/hass/.storage.
         frontend = { };
         zeroconf = { };
+        dhcp = { };
         mobile_app = { };
         media_source = { };
         zha.custom_quirks_path = "${pkgs.zhaCustomQuirks}";
