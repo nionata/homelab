@@ -21,3 +21,135 @@ Steps that still happen in the HA UI after deploying to a host with no existing 
 7. Configure the mobile app
 8. Plug in the zigbee USB device and register devices
 9. Approve the discovered Piper (Wyoming Protocol) device. Then pick Piper as the text-to-speech engine under Settings → Voice assistants.
+
+
+Reolink camera
+
+
+```bash
+[nionata@homemac:~]$ reolink-cli discover  | jq .
+{
+  "ok": true,
+  "command": "discover",
+  "protocol": null,
+  "data": {
+    "source": "lan+remoteUid+lanUdp+v30Lan",
+    "timeoutSecs": 2,
+    "count": 1,
+    "counts": {
+      "lan": 0,
+      "lanUdp": 1,
+      "remoteUid": 0,
+      "v30Lan": 0
+    },
+    "diagnostics": {
+      "wsDiscovery": {
+        "status": "ok",
+        "elapsedMs": 2001,
+        "resultCount": 0
+      },
+      "remoteUid": {
+        "status": "unsupported",
+        "elapsedMs": 0,
+        "resultCount": 0
+      },
+      "lanUdp": {
+        "status": "ok",
+        "elapsedMs": 2001,
+        "sendPort": 2000,
+        "receivePort": 3000,
+        "probeBytes": 4,
+        "interfacesEnumerated": 3,
+        "targets": [
+          {
+            "source": "100.119.145.71",
+            "broadcast": "100.119.145.71",
+            "fallback": false,
+            "bindSucceeded": true,
+            "sendSucceeded": true
+          },
+          {
+            "source": "172.16.25.1",
+            "broadcast": "172.16.25.255",
+            "fallback": false,
+            "bindSucceeded": true,
+            "sendSucceeded": true
+          },
+          {
+            "source": "192.168.1.106",
+            "broadcast": "192.168.1.255",
+            "fallback": false,
+            "bindSucceeded": true,
+            "sendSucceeded": true
+          }
+        ],
+        "probesSent": 3,
+        "replyDatagrams": 1,
+        "validReplies": 1,
+        "ignoredDatagrams": 0,
+        "uniqueDevices": 1
+      },
+      "v30Lan": {
+        "status": "ok",
+        "elapsedMs": 2001,
+        "resultCount": 0
+      }
+    },
+    "devices": [
+      {
+        "discovery": "lanUdp",
+        "transport": "tcp",
+        "host": "172.16.25.207:9000",
+        "uid": "...",
+        "mac": "EC:71:DB:47:A1:B8",
+        "scopes": [
+          "reolink-lan://name/E1 Pro"
+        ]
+      }
+    ]
+  },
+  "error": null
+}
+```
+
+```python
+import asyncio
+from reolink_aio.api import Host
+
+CAMERA_IP = # Replace with your camera's IP
+NEW_PASSWORD = # Letters & numbers only, max 31 chars
+
+async def setup_camera():
+    # Connect with blank password over port 9000
+    host = Host(CAMERA_IP, "admin", "", port=9000)
+    await host.get_host_data()
+
+    # 1. Send the ModifyUser command directly to set the initial admin password
+    body = [
+        {
+            "cmd": "ModifyUser",
+            "action": 0,
+            "param": {
+                "User": {
+                    "userName": "admin",
+                    "oldPassword": "",
+                    "newPassword": NEW_PASSWORD,
+                }
+            },
+        }
+    ]
+    response = await host.send(body)
+    print("Password update response:", response)
+
+    await host.logout()
+
+    # 2. Reconnect with the new password to enable RTSP and ONVIF ports
+    host = Host(CAMERA_IP, "admin", NEW_PASSWORD, port=9000)
+    await host.get_host_data()
+    await host.set_net_port(enable_onvif=True, enable_rtsp=True)
+    print("RTSP (554) and ONVIF (8000) enabled.")
+
+    await host.logout()
+
+asyncio.run(setup_camera())
+```

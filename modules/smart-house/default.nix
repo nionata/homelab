@@ -55,6 +55,10 @@ in
   config = lib.mkIf cfg.enable {
     networking.firewall.allowedTCPPorts = [ 8123 ];
 
+    # Reolink camera CLI. The released binaries are under a proprietary EULA.
+    nixpkgs.config.allowUnfreePredicate = pkg: lib.getName pkg == "reolink-cli";
+    environment.systemPackages = [ pkgs.reolink-cli ];
+
     # AirPlay (apple_tv/pyatv) streaming to shairport-sync receivers. In classic
     # AirPlay the receiver sends clock-sync requests to pyatv's timing port and
     # resend requests to its control port. Nothing outbound opens conntrack
@@ -135,6 +139,13 @@ in
         "logbook"
         # Talks to the local Piper text-to-speech server
         "wyoming"
+        # Reolink cameras and doorbells. ONVIF push events arrive on the HA
+        # webhook (port 8123), which is already open.
+        "reolink"
+        # Watches DHCP traffic to discover devices. Reolink is matched by its
+        # MAC prefix, and known cameras get their IP updated when it changes.
+        # The NixOS module grants CAP_NET_RAW for the packet capture.
+        "dhcp"
       ];
 
       config = {
@@ -146,12 +157,13 @@ in
         };
 
         # Declaring the integrations below ensures they are loaded on boot.
-        # Integrations without YAML setup (apple_tv, met, systemmonitor, wled,
-        # and the zha radio itself) must be added once in the UI. Discovery
+        # Integrations without YAML setup (apple_tv, met, reolink, systemmonitor,
+        # wled, and the zha radio itself) must be added once in the UI. Discovery
         # prompts for most of them. Their config entries persist in
         # /var/lib/hass/.storage.
         frontend = { };
         zeroconf = { };
+        dhcp = { };
         mobile_app = { };
         media_source = { };
         zha.custom_quirks_path = "${pkgs.zhaCustomQuirks}";

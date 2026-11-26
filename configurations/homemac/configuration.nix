@@ -39,6 +39,42 @@ in
     }
   ];
 
+  # Reolink camera, cabled directly to the USB Ethernet adapter. homemac runs a
+  # DHCP server on this link and pins the camera's address by MAC. No DNS,
+  # router, or NTP is offered and IP forwarding is off, so the camera can't
+  # reach the internet. This sorts before the catch-all en* DHCP client
+  # network, so it takes precedence for this interface.
+  systemd.network.networks."10-camera" = {
+    matchConfig.Name = "enp0s20u1";
+    address = [ "172.16.25.1/24" ];
+    networkConfig = {
+      DHCPServer = true;
+      LinkLocalAddressing = "no";
+      IPv6AcceptRA = false;
+    };
+    dhcpServerConfig = {
+      PoolOffset = 100;
+      PoolSize = 20;
+      EmitDNS = false;
+      EmitRouter = false;
+      EmitNTP = false;
+    };
+    dhcpServerStaticLeases = [
+      {
+        MACAddress = "ec:71:db:47:a1:b8";
+        # The camera requests this address in its DHCP Discover. It's likely a
+        # saved factory or NVR default, so pinning it here matches what the
+        # camera expects even after a reset.
+        Address = "172.16.25.207";
+      }
+    ];
+  };
+  # 67 serves DHCP. 3000 receives replies to reolink-cli's discovery broadcast.
+  networking.firewall.interfaces.enp0s20u1.allowedUDPPorts = [
+    67
+    3000
+  ];
+
   # Run an iperf3 server for network benchmarking.
   # openFirewall only opens TCP. Add UDP manually for iperf3 UDP tests.
   services.iperf3 = {
